@@ -14,6 +14,9 @@ class DistrictRepository < EnrollmentLoader
     elsif file == '/Pupil enrollment.csv'
       load_pupil_enrollment
       DistrictRepository.new(@enrollment_pupil_repo)
+    elsif file == '/High school graduation rates.csv'
+      load_high_school_graduation_rates
+      DistrictRepository.new(@high_school_grad_rates_repo)
     end
   end
 
