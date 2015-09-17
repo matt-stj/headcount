@@ -1,12 +1,9 @@
 require_relative '../lib/headcount2'
 
 class TestLoadingDistricts < Minitest::Test
-  def path
-    File.expand_path '../data', __dir__
-  end
-
+  attr_reader :path
   def test_it_can_load_a_district_from_csv_data
-    dr = DistrictRepository.from_csv(path)
+    dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
     district = dr.find_by_name("ACADEMY 20")
 
     assert_equal 22620, district.enrollment.in_year(2009)
@@ -15,14 +12,14 @@ class TestLoadingDistricts < Minitest::Test
   end
 
   def test_can_do_things
-    dr = DistrictRepository.from_csv(path)
+    dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
     district = dr.find_by_name("WEST YUMA COUNTY RJ-1")
 
     assert_equal 0, district.enrollment.in_year(2014)
   end
 
   def test_it_works_for_other_things
-    dr = DistrictRepository.from_csv(path)
+    dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
     district = dr.find_by_name("COLORADO")
 
     assert_equal 863561, district.enrollment.in_year(2012)
