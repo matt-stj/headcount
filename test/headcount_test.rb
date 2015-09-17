@@ -21,6 +21,14 @@ class TestLoadingDistricts < Minitest::Test
     assert_equal District, district.class
   end
 
+  #District Test
+  def test_find_by_name_returns_nil_if_unsuccessful
+    dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
+    district = dr.find_by_name("ACADEMY 201")
+
+    assert_equal nil, district
+  end
+
   # District_Repo_Test
   def test_enrollment_data_with_NA_values_return_zero
     dr = DistrictRepository.from_csv('/Pupil enrollment.csv')

@@ -25,7 +25,11 @@ class DistrictRepository
   end
 
   def find_by_name(name)
-    @districts.fetch(name)
+    if !@districts.has_key?(name) == true
+      return nil
+    else
+      @districts.fetch(name)
+    end
   end
 
 end
@@ -62,7 +66,7 @@ class Enrollment
     annual_enrollment.fetch(year)
   end
 end
-# 
+#
 # dr = DistrictRepository.from_csv('/Users/Matt/Turing/1-Modual/Projects/headcount/headcount/data/Pupil enrollment.csv')
 # district = dr.find_by_name("COLORADO")
 # district.enrollment.class
