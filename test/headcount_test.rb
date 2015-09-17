@@ -62,7 +62,6 @@ class TestLoadingDistricts < Minitest::Test
   end
 
   def test_calling_name_on_District_returns_the_upcased_name_of_the_District
-    skip
     dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
 
     assert_equal "COLORADO", dr.name("Colorado")

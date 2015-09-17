@@ -32,6 +32,12 @@ class DistrictRepository
     end
   end
 
+  def name(name)
+    if @districts.has_key?(name.upcase)
+      return name.upcase
+    end
+  end
+
 end
 
 class District
@@ -41,25 +47,17 @@ class District
     @enrollment = Enrollment.new(data)
   end
 
-  def enrollment
-    @enrollment
-  end
-
-  def name(the_name)
-    @districts
+  def name(name)
+    @name
   end
 
 end
 
 class Enrollment
-  attr_reader :annual_enrollment
+  attr_reader :annual_enrollment, :enrollment
 
   def initialize(data)
     @annual_enrollment = data
-  end
-
-  def enrollment
-    @enrollment
   end
 
   def in_year(year)
@@ -68,6 +66,5 @@ class Enrollment
 end
 #
 # dr = DistrictRepository.from_csv('/Users/Matt/Turing/1-Modual/Projects/headcount/headcount/data/Pupil enrollment.csv')
-# district = dr.find_by_name("COLORADO")
-# district.enrollment.class
-# # => Enrollment
+# dr.name("Colorado")
+# # => "COLORADO"
