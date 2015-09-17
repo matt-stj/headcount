@@ -33,7 +33,3 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 181, districts.size
   end
 end
-
-# district.enrollment.in_year(2009) # => 22620
-# district.enrollment.graduation_rate.for_high_school_in_year(2010) # => 0.895
-# district.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 3, 2008) # => 0.857

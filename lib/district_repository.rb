@@ -14,6 +14,12 @@ class DistrictRepository < EnrollmentLoader
     elsif file == '/Pupil enrollment.csv'
       load_pupil_enrollment
       DistrictRepository.new(@enrollment_pupil_repo)
+    elsif file == '/Remediation in higher education.csv'
+      load_remediation_in_higher_education
+      DistrictRepository.new(@enrollment_remediation_repo)
+    elsif file == '/Kindergartners in full-day program.csv'
+      load_kindergarteners_in_full_day_program
+      DistrictRepository.new(@enrollment_kindegarten_programs_repo)
     end
   end
 
