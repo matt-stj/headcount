@@ -5,12 +5,15 @@ class Enrollment
     @data = data
   end
 
-
   def in_year(year)
     @data.fetch(year)
   end
 
   def online_participation_in_year(year)
+    @data.fetch(year)
+  end
+
+  def graduation_rate_in_year(year)
     @data.fetch(year)
   end
 end

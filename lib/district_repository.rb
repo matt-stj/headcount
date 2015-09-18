@@ -20,6 +20,9 @@ class DistrictRepository < EnrollmentLoader
     elsif file == '/Kindergartners in full-day program.csv'
       load_kindergarteners_in_full_day_program
       DistrictRepository.new(@enrollment_kindegarten_programs_repo)
+    elsif file == '/High school graduation rates.csv'
+      load_high_school_graduation_rates
+      DistrictRepository.new(@high_school_grad_rates_repo)
     end
   end
 
