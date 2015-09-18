@@ -24,6 +24,12 @@ class EnrollmentLoader
     end
   end
 
+  def self.repo_builder_extreme(repo, groups, data_type = :float)
+    groups.each_pair do |key, value|
+      repo[key.upcase] = value.map { |row| Hash[row.fetch(:timeframe).to_i => [row.fetch(:race).to_sym, row.fetch(:data)].flatten].to_h}
+    end
+  end
+
   def self.load_pupil_enrollment
     rows = CSV.readlines(path + '/Pupil enrollment.csv', headers: true, header_converters: :symbol).map(&:to_h)
     groups = group_by(rows)
@@ -66,10 +72,10 @@ class EnrollmentLoader
     repo_builder(@special_education_repo, groups, :float)
   end
 
-  def self.load_pupil_enrollment_by_race_ethnicity
-    rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
-    groups = group_by(rows)
-    @pupil_enrollment_race_ethnicity_repo = {}
-    repo_builder(@pupil_enrollment_race_ethnicity_repo, groups, :float)
-  end
+  # def self.load_pupil_enrollment_by_race_ethnicity
+  #   rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  #   groups = group_by(rows)
+  #   @pupil_enrollment_race_ethnicity_repo = {}
+  #   repo_builder_extreme(@pupil_enrollment_race_ethnicity_repo, groups, :float)
+  # end
 end
