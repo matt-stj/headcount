@@ -23,6 +23,12 @@ class DistrictRepository < EnrollmentLoader
     elsif file == '/High school graduation rates.csv'
       load_high_school_graduation_rates
       DistrictRepository.new(@high_school_grad_rates_repo)
+    elsif file == '/High school graduation rates.csv'
+      load_special_education
+      DistrictRepository.new(@enrollment_special_education_repo)
+    elsif file == '/Dropout rates by race and ethnicity.csv'
+      load_special_education
+      DistrictRepository.new(@enrollment_dropout_by_race_repo)
     end
   end
 

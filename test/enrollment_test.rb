@@ -36,4 +36,11 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal 0.889, district.enrollment.graduation_rate_in_year(2012)
   end
+
+  def test_special_education
+    dr = DistrictRepository.from_csv('/Special education.csv')
+    # district = dr.find_by_name("ACADEMY 20")
+
+    # assert_equal 0.889, district.enrollment.graduation_rate_in_year(2012)
+  end
 end

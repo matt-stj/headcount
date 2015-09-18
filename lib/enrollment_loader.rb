@@ -56,4 +56,41 @@ class EnrollmentLoader
     repo_builder(@high_school_grad_rates_repo, groups, :float)
   end
 
+  def self.drop_out_builder(repo, groups)
+      groups.each_pair do |key, value|
+        repo[key] ||= value.map { |row| [[Hash[:year => row.fetch(:timeframe).to_i], Hash[:data => row.fetch(:data)[0..4].to_f], Hash[:category => row.fetch(:category)]]].flatten }
+        binding.pry
+    end
+  end
+
+  def self.load_dropout_rates_by_race
+    rows = CSV.readlines(path + '/Dropout rates by race and ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    groups = rows.group_by { |row| row.fetch(:location) }
+    @enrollment_dropout_by_race_repo = {}
+    drop_out_builder(@enrollment_dropout_by_race_repo, groups)
+  end
+
+
+  load_dropout_rates_by_race
+
+  # def self.sped_repo_builder(repo, groups)
+  #     groups.each_pair do |key, value|
+  #       if groups.fetch(:dataformat) == "Percent"
+  #       repo[key.upcase] = value.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
+  #     else
+  #         repo[key.upcase] = value.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
+  #     end
+  #   end
+  # end
+  #
+  # def self.load_special_education
+  #   rows = CSV.readlines(path + '/Special education.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  #   groups = rows.group_by { |row| row.fetch(:location) }
+  #   binding.pry
+  #   @enrollment_special_education_repo = {}
+  #   sped_repo_builder(@enrollment_special_education_repo, groups)
+  #   binding.pry
+  # end
+  # load_special_education
+
 end
