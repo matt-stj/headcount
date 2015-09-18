@@ -9,13 +9,6 @@ class EnrollmentTest < Minitest::Test
     assert_equal 341, district.enrollment.online_participation_in_year(2013)
   end
 
-  def test_kindergartners_in_full_day_programs
-    dr = DistrictRepository.from_csv('/Kindergartners in full-day program.csv')
-    district = dr.find_by_name("ACADEMY 20")
-
-    assert_equal 0.391, district.enrollment.online_participation_in_year(2007)
-  end
-
   def test_graduation_rate_in_year
     dr = DistrictRepository.from_csv('/High school graduation rates.csv')
     district = dr.find_by_name("ACADEMY 20")
@@ -55,10 +48,24 @@ class EnrollmentTest < Minitest::Test
   def test_remediation_by_year
     dr = DistrictRepository.from_csv('/Remediation in higher education.csv')
     district = dr.find_by_name("ADAMS-ARAPAHOE 28J")
-
     expected_result = {2011=>0.533, 2010=>0.614, 2009=>0.601}
 
     assert_equal expected_result, district.enrollment.remediation_by_year
+  end
+
+  def test_kindergartners_participation_in_year
+    dr = DistrictRepository.from_csv('/Kindergartners in full-day program.csv')
+    district = dr.find_by_name("ACADEMY 20")
+
+    assert_equal 0.391, district.enrollment.kindergarten_participation_in_year(2007)
+  end
+
+  def test_kindergartners_participation_by_year
+    dr = DistrictRepository.from_csv('/Remediation in higher education.csv')
+    district = dr.find_by_name("ADAMS-ARAPAHOE 28J")
+    expected_result = {2011=>0.533, 2010=>0.614, 2009=>0.601}
+
+    assert_equal expected_result, district.enrollment.kindergarten_participation_by_year
   end
 
 
