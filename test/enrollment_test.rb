@@ -44,6 +44,15 @@ class EnrollmentTest < Minitest::Test
     assert_equal 0.105, district.enrollment.special_education_in_year(2013)
   end
 
+  def test_special_education_by_year
+    dr = DistrictRepository.from_csv('/Special education.csv')
+    district = dr.find_by_name("MEEKER RE1")
+    expected_result = {2009=>0.089, 2011=>0.09, 2012=>0.103, 2013=>0.105, 2010=>0.091, 2014=>0.103}
+
+    assert_equal expected_result, district.enrollment.special_education_by_year
+  end
+
+
   # def test_participation_by_race_or_ethnicity
   #   skip
   #   dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')

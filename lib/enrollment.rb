@@ -21,7 +21,11 @@ class Enrollment
     @data.fetch(year)
   end
 
-  def participation_by_race_or_ethnicity(race)
-
+  def special_education_by_year
+    @data
   end
+
+  # def participation_by_race_or_ethnicity(race)
+  #
+  # end
 end
