@@ -24,6 +24,14 @@ class EnrollmentTest < Minitest::Test
     assert_equal 341, district.enrollment.online_participation_in_year(2013)
   end
 
+  def test_online_participation_by_year
+    dr = DistrictRepository.from_csv('/Online pupil enrollment.csv')
+    district = dr.find_by_name("ACADEMY 20")
+    expected_result = {2011=>33,2012=>35,2013=>341}
+
+    assert_equal expected_result, district.enrollment.online_participation_by_year
+  end
+
   def test_remediation_in_higher_education
     dr = DistrictRepository.from_csv('/Remediation in higher education.csv')
     district = dr.find_by_name("ACADEMY 20")

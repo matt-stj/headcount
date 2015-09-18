@@ -21,6 +21,10 @@ class Enrollment
     @data.fetch(year)
   end
 
+  def online_participation_by_year
+    @data
+  end
+
   def graduation_rate_in_year(year)
     @data.fetch(year)
   end
