@@ -26,7 +26,11 @@ class DistrictRepository < EnrollmentLoader
     elsif file == '/Special education.csv'
       load_special_education
       DistrictRepository.new(@special_education_repo)
+    elsif file == '/Pupil enrollment by race_ethnicity.csv'
+      load_pupil_enrollment_by_race_ethnicity
+      DistrictRepository.new(@pupil_enrollment_by_race_ethnicity_repo)
     end
+
   end
 
   def initialize(repository_data)
