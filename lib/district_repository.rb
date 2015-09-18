@@ -6,7 +6,6 @@ require_relative 'district'
 
 class DistrictRepository < EnrollmentLoader
   attr_reader :path, :districts, :name, :online_enrollment_pupil_repo
-
   def self.from_csv(file)
     if file == '/Online pupil enrollment.csv'
       load_online_pupil_enrollment
@@ -30,7 +29,6 @@ class DistrictRepository < EnrollmentLoader
       load_pupil_enrollment_by_race_ethnicity
       DistrictRepository.new(@pupil_enrollment_by_race_ethnicity_repo)
     end
-
   end
 
   def initialize(repository_data)
@@ -51,5 +49,4 @@ class DistrictRepository < EnrollmentLoader
       return name.upcase
     end
   end
-
 end
