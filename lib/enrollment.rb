@@ -37,4 +37,26 @@ class Enrollment
     @data.fetch(year)
   end
 
+  def special_education_by_year
+    @data
+  end
+
+  def remediation_in_year(year)
+    @data.fetch(year)
+  end
+
+  def remediation_by_year
+    @data
+  end
+
+  def kindergarten_participation_in_year(year)
+    @data.fetch(year)
+  end
+
+  def kindergarten_participation_by_year
+    @data
+  end
+  # def participation_by_race_or_ethnicity(race)
+  #
+  # end
 end
