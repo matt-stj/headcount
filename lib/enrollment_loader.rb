@@ -1,12 +1,15 @@
 class EnrollmentLoader
-  attr_reader :path, :districts, :name, :online_enrollment_pupil_repo
-
   def self.path
     File.expand_path '../data', __dir__
   end
 
   def self.group_by(rows)
     rows.group_by { |row| row.fetch(:location) }
+  end
+
+  def self.data_format_checker(rows)
+    formats = rows.map {|row| row.fetch(:dataformat) }
+    formats.uniq!
   end
 
   def self.repo_builder(repo, groups, data_type = :integer)
@@ -18,6 +21,12 @@ class EnrollmentLoader
       groups.each_pair do |key, value|
         repo[key.upcase] = value.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
       end
+    end
+  end
+
+  def self.repo_builder_extreme(repo, groups, data_type = :float)
+    groups.each_pair do |key, value|
+      repo[key.upcase] = value.map { |row| Hash[row.fetch(:timeframe).to_i => [row.fetch(:race).to_sym, row.fetch(:data)].flatten].to_h}
     end
   end
 
@@ -56,4 +65,17 @@ class EnrollmentLoader
     repo_builder(@high_school_grad_rates_repo, groups, :float)
   end
 
+  def self.load_special_education
+    rows = CSV.readlines(path + '/Special education.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    groups = group_by(rows)
+    @special_education_repo = {}
+    repo_builder(@special_education_repo, groups, :float)
+  end
+
+  # def self.load_pupil_enrollment_by_race_ethnicity
+  #   rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  #   groups = group_by(rows)
+  #   @pupil_enrollment_race_ethnicity_repo = {}
+  #   repo_builder_extreme(@pupil_enrollment_race_ethnicity_repo, groups, :float)
+  # end
 end

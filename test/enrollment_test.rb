@@ -36,4 +36,26 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal 0.889, district.enrollment.graduation_rate_in_year(2012)
   end
+
+  def test_special_education_in_year
+    dr = DistrictRepository.from_csv('/Special education.csv')
+    district = dr.find_by_name("MEEKER RE1")
+
+    assert_equal 0.105, district.enrollment.special_education_in_year(2013)
+  end
+
+  # def test_participation_by_race_or_ethnicity
+  #   skip
+  #   dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
+  #   district = dr.find_by_name("Colorado")
+  #   district.participation_by_race_or_ethnicity('asian students')
+  #   assert_equal {2007 => 0.034,
+  #                 2008 => 0.036,
+  #                 2009 => 0.037,
+  #                 2010 => 0.030,
+  #                 2011 => 0.031,
+  #                 2012 => 0.032,
+  #                 2013 => 0.030,
+  #                 2014 => 0.030}, district.enrollment.participation_by_race_or_ethnicity(:asian)
+  # end
 end
