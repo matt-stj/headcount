@@ -68,7 +68,6 @@ class EnrollmentLoader
   def self.drop_out_builder(repo, groups)
       groups.each_pair do |key, value|
         repo[key] ||= Hash[value.map { |row| [[[:year => row.fetch(:timeframe).to_i], [:data => row.fetch(:data)[0..4].to_f], [:category => row.fetch(:category)]]] }.compact]
-        binding.pry
     end
   end
 
@@ -78,9 +77,6 @@ class EnrollmentLoader
     @enrollment_dropout_by_race_repo = {}
     drop_out_builder(@enrollment_dropout_by_race_repo, groups)
   end
-
-
-  load_dropout_rates_by_race
 
   # def self.sped_repo_builder(repo, groups)
   #     groups.each_pair do |key, value|
