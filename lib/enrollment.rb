@@ -16,4 +16,8 @@ class Enrollment
   def graduation_rate_in_year(year)
     @data.fetch(year)
   end
+
+  def special_education_in_year(year)
+    @data.fetch(year)
+  end
 end
