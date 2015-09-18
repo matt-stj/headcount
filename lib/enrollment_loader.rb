@@ -58,7 +58,7 @@ class EnrollmentLoader
 
   def self.drop_out_builder(repo, groups)
       groups.each_pair do |key, value|
-        repo[key] ||= value.map { |row| [[Hash[:year => row.fetch(:timeframe).to_i], Hash[:data => row.fetch(:data)[0..4].to_f], Hash[:category => row.fetch(:category)]]].flatten }
+        repo[key] ||= Hash[value.map { |row| [[[:year => row.fetch(:timeframe).to_i], [:data => row.fetch(:data)[0..4].to_f], [:category => row.fetch(:category)]]] }.compact]
         binding.pry
     end
   end
