@@ -54,17 +54,19 @@ class EnrollmentLoader
   def self.load_remediation_in_higher_education(path, repo_data)
     rows = CSV.readlines(path + '/Remediation in higher education.csv', headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
-      data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_f] }.to_h
+      data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
       repo_data[district_name.upcase] ||= {enrollment: {remediation: {}}}
       repo_data[district_name.upcase][:enrollment][:remediation] = data
     end
   end
 
-  def self.load_kindergarteners_in_full_day_program
+  def self.load_kindergarteners_in_full_day_program(path, repo_data)
     rows = CSV.readlines(path + '/Kindergartners in full-day program.csv', headers: true, header_converters: :symbol).map(&:to_h)
-    groups = group_by(rows)
-    @enrollment_kindegarten_programs_repo = {}
-    repo_builder(@enrollment_kindegarten_programs_repo, groups, :float)
+    group_by(rows).each do |district_name, rows|
+      data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
+      repo_data[district_name.upcase] ||= {enrollment: {kindergartner_enrollment: {}}}
+      repo_data[district_name.upcase][:enrollment][:kindergartner_enrollment] = data
+    end
   end
 
   def self.load_high_school_graduation_rates

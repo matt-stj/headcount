@@ -50,11 +50,11 @@ class Enrollment
   end
 
   def kindergarten_participation_in_year(year)
-    @data.fetch(year)
+    kindergarten_participation_by_year.fetch(year)
   end
 
   def kindergarten_participation_by_year
-    @data
+    @data.fetch(:kindergartner_enrollment)
   end
   # def participation_by_race_or_ethnicity(race)
   #

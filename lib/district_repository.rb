@@ -25,17 +25,11 @@ class DistrictRepository < EnrollmentLoader
     load_online_pupil_enrollment(path, repo_data)
     load_pupil_enrollment(path, repo_data)
     load_remediation_in_higher_education(path, repo_data)
+    load_kindergarteners_in_full_day_program(path, repo_data)
     repo = DistrictRepository.new(repo_data)
-
-    if file == '/Kindergartners in full-day program.csv'
-      load_kindergarteners_in_full_day_program
-      repo = DistrictRepository.new(@enrollment_kindegarten_programs_repo)
-    elsif file == '/High school graduation rates.csv'
+    if file == '/High school graduation rates.csv'
       load_high_school_graduation_rates
       repo = DistrictRepository.new(@high_school_grad_rates_repo)
-    elsif file == '/High school graduation rates.csv'
-      load_special_education
-      repo = DistrictRepository.new(@enrollment_special_education_repo)
     elsif file == '/Dropout rates by race and ethnicity.csv'
       load_special_education
       repo = DistrictRepository.new(@enrollment_dropout_by_race_repo)
