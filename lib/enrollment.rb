@@ -26,11 +26,11 @@ class Enrollment
   end
 
   def graduation_rate_in_year(year)
-    @data.fetch(year)
+    graduation_rate_by_year.fetch(year)
   end
 
   def graduation_rate_by_year
-    @data
+    @data.fetch(:graduation_rate)
   end
 
   def special_education_in_year(year)
