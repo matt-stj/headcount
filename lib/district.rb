@@ -7,7 +7,7 @@ class District
     else
       @enrollment = Enrollment.new(data)
     end
-    @statewide_testing = StatewideTesting.new(data)
+    # @statewide_testing = StatewideTesting.new(data)
   end
 
   def name(name)

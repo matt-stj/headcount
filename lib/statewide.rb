@@ -1,5 +1,5 @@
-class StatewideTesting
-  def initialize(data)
-    @data = data
-  end
-end
+# class StatewideTesting
+#   def initialize(data)
+#     @data = data
+#   end
+# end

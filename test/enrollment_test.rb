@@ -87,7 +87,7 @@ class EnrollmentTest < Minitest::Test
   def test_remediation_in_year
     dr = DistrictRepository.from_csv('/Remediation in higher education.csv')
     district = dr.find_by_name("ADAMS-ARAPAHOE 28J")
-
+    binding.pry
     assert_equal 0.614, district.enrollment.remediation_in_year(2010)
   end
 
@@ -95,7 +95,7 @@ class EnrollmentTest < Minitest::Test
     dr = DistrictRepository.from_csv('/Remediation in higher education.csv')
     district = dr.find_by_name("ADAMS-ARAPAHOE 28J")
     expected_result = {2011=>0.533, 2010=>0.614, 2009=>0.601}
-
+    binding.pry
     assert_equal expected_result, district.enrollment.remediation_by_year
   end
 
@@ -107,6 +107,7 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_kindergartners_participation_by_year
+    skip
     dr = DistrictRepository.from_csv('/Remediation in higher education.csv')
     district = dr.find_by_name("ADAMS-ARAPAHOE 28J")
     expected_result = {2011=>0.533, 2010=>0.614, 2009=>0.601}

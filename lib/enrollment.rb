@@ -6,15 +6,15 @@ class Enrollment
   end
 
   def in_year(year)
-    @data.fetch(year)
+    participation_by_year.fetch(year)
   end
 
   def participation_in_year(year)
-    @data.fetch(year)
+    participation_by_year.fetch(year)
   end
 
   def participation_by_year
-    @data
+    @data.fetch(:pupil_enrollment)
   end
 
   def online_participation_in_year(year)
@@ -42,11 +42,11 @@ class Enrollment
   end
 
   def remediation_in_year(year)
-    @data.fetch(year)
+    remediation_by_year.fetch(year)
   end
 
   def remediation_by_year
-    @data
+    @data.fetch(:remediation)
   end
 
   def kindergarten_participation_in_year(year)

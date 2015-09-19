@@ -17,17 +17,17 @@ class DistrictRepository < EnrollmentLoader
       path = File.expand_path '../data', __dir__
     end
 
+    # eventually (meaning once all the ones below are correct)
+    # repo_data = CsvLoader.new(path).load
+    # DistrictRepository.new(repo_data)
+
     repo_data = {}
     load_online_pupil_enrollment(path, repo_data)
+    load_pupil_enrollment(path, repo_data)
+    load_remediation_in_higher_education(path, repo_data)
     repo = DistrictRepository.new(repo_data)
 
-    if file == '/Pupil enrollment.csv'
-      load_pupil_enrollment
-      repo = DistrictRepository.new(@enrollment_pupil_repo)
-    elsif file == '/Remediation in higher education.csv'
-      load_remediation_in_higher_education
-      repo = DistrictRepository.new(@enrollment_remediation_repo)
-    elsif file == '/Kindergartners in full-day program.csv'
+    if file == '/Kindergartners in full-day program.csv'
       load_kindergarteners_in_full_day_program
       repo = DistrictRepository.new(@enrollment_kindegarten_programs_repo)
     elsif file == '/High school graduation rates.csv'
@@ -45,9 +45,9 @@ class DistrictRepository < EnrollmentLoader
     elsif file == '/Pupil enrollment by race_ethnicity.csv'
       load_pupil_enrollment_by_race_ethnicity
       repo = DistrictRepository.new(@pupil_enrollment_by_race_ethnicity_repo)
-    elsif file == '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv'
-      load_third_grade_students
-      repo = DistrictRepository.new(@third_grade_test_scores_repo)
+    # elsif file == '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv'
+    #   load_third_grade_students
+    #   repo = DistrictRepository.new(@third_grade_test_scores_repo)
     end
     repo
   end

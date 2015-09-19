@@ -1,6 +1,6 @@
 require_relative 'statewide_loader'
 
-class EnrollmentLoader <StatewideTestingLoader
+class EnrollmentLoader
   def self.path
     File.expand_path '../data', __dir__
   end
@@ -33,27 +33,31 @@ class EnrollmentLoader <StatewideTestingLoader
     end
   end
 
-  def self.load_pupil_enrollment
+  def self.load_pupil_enrollment(path, repo_data)
     rows = CSV.readlines(path + '/Pupil enrollment.csv', headers: true, header_converters: :symbol).map(&:to_h)
-    groups = group_by(rows)
-    @enrollment_pupil_repo = {}
-    repo_builder(@enrollment_pupil_repo, groups, :integer)
+    group_by(rows).each do |district_name, rows|
+      data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
+      repo_data[district_name.upcase] ||= {enrollment: {pupil_enrollment: {}}}
+      repo_data[district_name.upcase][:enrollment][:pupil_enrollment] = data
+    end
   end
 
   def self.load_online_pupil_enrollment(path, repo_data)
     rows = CSV.readlines(path + '/Online pupil enrollment.csv', headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
-      repo_data[district_name.upcase] ||= {enrollment: {}}
+      repo_data[district_name.upcase] ||= {enrollment: {online_enrollment: {}}}
       repo_data[district_name.upcase][:enrollment][:online_enrollment] = data
     end
   end
 
-  def self.load_remediation_in_higher_education
+  def self.load_remediation_in_higher_education(path, repo_data)
     rows = CSV.readlines(path + '/Remediation in higher education.csv', headers: true, header_converters: :symbol).map(&:to_h)
-    groups = group_by(rows)
-    @enrollment_remediation_repo = {}
-    repo_builder(@enrollment_remediation_repo, groups, :float)
+    group_by(rows).each do |district_name, rows|
+      data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_f] }.to_h
+      repo_data[district_name.upcase] ||= {enrollment: {remediation: {}}}
+      repo_data[district_name.upcase][:enrollment][:remediation] = data
+    end
   end
 
   def self.load_kindergarteners_in_full_day_program
