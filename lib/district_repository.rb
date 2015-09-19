@@ -7,38 +7,49 @@ require_relative 'statewide'
 
 class DistrictRepository < EnrollmentLoader
   attr_reader :path, :districts, :name, :online_enrollment_pupil_repo
-  def self.from_csv(file)
-    if file == '/Online pupil enrollment.csv'
-      load_online_pupil_enrollment
-      DistrictRepository.new(@online_enrollment_pupil_repo)
-    elsif file == '/Pupil enrollment.csv'
+
+  def self.from_csv(file_or_path)
+    # eventually we should just receive the path and not have this stuff
+    if File.directory? file_or_path
+      path = file_or_path
+    else
+      file = file_or_path
+      path = File.expand_path '../data', __dir__
+    end
+
+    repo_data = {}
+    load_online_pupil_enrollment(path, repo_data)
+    repo = DistrictRepository.new(repo_data)
+
+    if file == '/Pupil enrollment.csv'
       load_pupil_enrollment
-      DistrictRepository.new(@enrollment_pupil_repo)
+      repo = DistrictRepository.new(@enrollment_pupil_repo)
     elsif file == '/Remediation in higher education.csv'
       load_remediation_in_higher_education
-      DistrictRepository.new(@enrollment_remediation_repo)
+      repo = DistrictRepository.new(@enrollment_remediation_repo)
     elsif file == '/Kindergartners in full-day program.csv'
       load_kindergarteners_in_full_day_program
-      DistrictRepository.new(@enrollment_kindegarten_programs_repo)
+      repo = DistrictRepository.new(@enrollment_kindegarten_programs_repo)
     elsif file == '/High school graduation rates.csv'
       load_high_school_graduation_rates
-      DistrictRepository.new(@high_school_grad_rates_repo)
+      repo = DistrictRepository.new(@high_school_grad_rates_repo)
     elsif file == '/High school graduation rates.csv'
       load_special_education
-      DistrictRepository.new(@enrollment_special_education_repo)
+      repo = DistrictRepository.new(@enrollment_special_education_repo)
     elsif file == '/Dropout rates by race and ethnicity.csv'
       load_special_education
-      DistrictRepository.new(@enrollment_dropout_by_race_repo)
+      repo = DistrictRepository.new(@enrollment_dropout_by_race_repo)
     elsif file == '/Special education.csv'
       load_special_education
-      DistrictRepository.new(@special_education_repo)
+      repo = DistrictRepository.new(@special_education_repo)
     elsif file == '/Pupil enrollment by race_ethnicity.csv'
       load_pupil_enrollment_by_race_ethnicity
-      DistrictRepository.new(@pupil_enrollment_by_race_ethnicity_repo)
+      repo = DistrictRepository.new(@pupil_enrollment_by_race_ethnicity_repo)
     elsif file == '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv'
       load_third_grade_students
-      DistrictRepository.new(@third_grade_test_scores_repo)
+      repo = DistrictRepository.new(@third_grade_test_scores_repo)
     end
+    repo
   end
 
   def initialize(repository_data)

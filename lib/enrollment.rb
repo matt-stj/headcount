@@ -18,11 +18,11 @@ class Enrollment
   end
 
   def online_participation_in_year(year)
-    @data.fetch(year)
+    online_participation_by_year.fetch(year)
   end
 
   def online_participation_by_year
-    @data
+    @data.fetch(:online_enrollment)
   end
 
   def graduation_rate_in_year(year)
