@@ -23,6 +23,7 @@ class EnrollmentLoader <StatewideTestingLoader
       groups.each_pair do |key, value|
         repo[key.upcase] = value.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
       end
+                          #WHAT DATA REPRESENTS (:online_pupil)
     end
   end
 
@@ -75,9 +76,18 @@ class EnrollmentLoader <StatewideTestingLoader
 
   def self.load_dropout_rates_by_race
     rows = CSV.readlines(path + '/Dropout rates by race and ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
-    groups = rows.group_by { |row| row.fetch(:location) }
+    grouped_rows = rows.group_by { |row|  row.fetch(:location).upcase }
     @enrollment_dropout_by_race_repo = {}
-    drop_out_builder(@enrollment_dropout_by_race_repo, groups)
+    location_with_years = grouped_rows.map do |key, value|
+     @enrollment_dropout_by_race_repo[key] ||= value.map {|row| [row.fetch(:timeframe).to_i, value.map {|row| [row.fetch(:category).downcase, row.fetch(:data)[0..4].to_f]}.to_h]}.to_h
+    end
+    @enrollment_dropout_by_race_repo
+
+    # drop_out_builder(@enrollment_dropout_by_race_repo, groups)
+  end
+
+  def self.convert_keys_to_correct_symbols(repo)
+
   end
 
   # def self.sped_repo_builder(repo, groups)
