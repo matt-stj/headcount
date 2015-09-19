@@ -3,6 +3,7 @@ class District
   def initialize(data)
     data = data
     @enrollment = Enrollment.new(data)
+    @statewide_testing = StatewideTesting.new(data)
   end
 
   def name(name)

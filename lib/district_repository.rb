@@ -3,6 +3,7 @@ require 'pry'
 require_relative 'enrollment_loader'
 require_relative 'enrollment'
 require_relative 'district'
+require_relative 'statewide'
 
 class DistrictRepository < EnrollmentLoader
   attr_reader :path, :districts, :name, :online_enrollment_pupil_repo
@@ -34,6 +35,9 @@ class DistrictRepository < EnrollmentLoader
     elsif file == '/Pupil enrollment by race_ethnicity.csv'
       load_pupil_enrollment_by_race_ethnicity
       DistrictRepository.new(@pupil_enrollment_by_race_ethnicity_repo)
+    elsif file == '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv'
+      load_third_grade_students
+      DistrictRepository.new(@third_grade_test_scores_repo)
     end
   end
 

@@ -1,4 +1,6 @@
-class EnrollmentLoader
+require_relative 'statewide_loader'
+
+class EnrollmentLoader <StatewideTestingLoader
   def self.path
     File.expand_path '../data', __dir__
   end
