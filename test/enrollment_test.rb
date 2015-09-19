@@ -32,14 +32,6 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, district.enrollment.online_participation_by_year
   end
 
-  def test_remediation_in_higher_education
-    skip "Calling the wrong method"
-    dr = DistrictRepository.from_csv('/Remediation in higher education.csv')
-    district = dr.find_by_name("ACADEMY 20")
-
-    assert_equal 0.264, district.enrollment.online_participation_in_year(2009)
-  end
-
   def test_graduation_rate_in_year
     dr = DistrictRepository.from_csv('/High school graduation rates.csv')
     district = dr.find_by_name("ACADEMY 20")

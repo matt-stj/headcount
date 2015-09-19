@@ -34,11 +34,11 @@ class Enrollment
   end
 
   def special_education_in_year(year)
-    @data.fetch(year)
+    special_education_by_year.fetch(year)
   end
 
   def special_education_by_year
-    @data
+    @data.fetch(:special_education)
   end
 
   def remediation_in_year(year)

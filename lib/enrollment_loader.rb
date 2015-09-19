@@ -69,6 +69,15 @@ class EnrollmentLoader
     end
   end
 
+  def self.load_special_education(path, repo_data)
+    rows = CSV.readlines(path + '/Special education.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    group_by(rows).each do |district_name, rows|
+    data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
+    repo_data[district_name.upcase] ||= {enrollment: {special_education: {}}}
+    repo_data[district_name.upcase][:enrollment][:special_education] = data
+    end
+  end
+
   def self.load_high_school_graduation_rates
     rows = CSV.readlines(path + '/High school graduation rates.csv', headers: true, header_converters: :symbol).map(&:to_h)
     groups = group_by(rows)
@@ -118,12 +127,7 @@ class EnrollmentLoader
   # end
   # load_special_education
 
-  def self.load_special_education
-    rows = CSV.readlines(path + '/Special education.csv', headers: true, header_converters: :symbol).map(&:to_h)
-    groups = group_by(rows)
-    @special_education_repo = {}
-    repo_builder(@special_education_repo, groups, :float)
-  end
+
 
   # def self.load_pupil_enrollment_by_race_ethnicity
   #   rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
