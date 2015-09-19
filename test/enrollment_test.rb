@@ -32,6 +32,22 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, district.enrollment.online_participation_by_year
   end
 
+  def test_kindergartners_in_full_day_programs
+    skip "Calling the wrong method"
+    dr = DistrictRepository.from_csv('/Kindergartners in full-day program.csv')
+    district = dr.find_by_name("ACADEMY 20")
+
+    assert_equal 0.391, district.enrollment.online_participation_in_year(2007)
+  end
+
+  def test_kindergartners_in_full_day_programs
+    skip "Calling the wrong method"
+    dr = DistrictRepository.from_csv('/Kindergartners in full-day program.csv')
+    district = dr.find_by_name("ACADEMY 20")
+
+    assert_equal 0.391, district.enrollment.online_participation_in_year(2007)
+  end
+
   def test_graduation_rate_in_year
     dr = DistrictRepository.from_csv('/High school graduation rates.csv')
     district = dr.find_by_name("ACADEMY 20")
@@ -42,7 +58,9 @@ class EnrollmentTest < Minitest::Test
   def test_graduation_rate_by_year
     dr = DistrictRepository.from_csv('/High school graduation rates.csv')
     district = dr.find_by_name("ACADEMY 20")
+    expected_result = {2010=>0.895,2011=>0.895,2012=>0.889,2013=>0.913,2014=>0.898}
 
+    assert_equal expected_result, district.enrollment.graduation_rate_by_year
   end
 
   def test_edge_case_truncate_floats
