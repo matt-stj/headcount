@@ -9,13 +9,13 @@ class StatewideTestingLoader
 
     @third_grade_test_scores_repo = {}
     location_with_years = grouped_rows.map do |key, value|
-     @third_grade_test_scores_repo[key] = value.map {|row| [row.fetch(:timeframe).to_i, value.map {|row| [row.fetch(:score).downcase.to_sym, row.fetch(:data).to_f]}.to_h]}.to_h
+     @third_grade_test_scores_repo[key] ||= value.map {|row| [row.fetch(:timeframe).to_i, value.map {|row| [row.fetch(:score).downcase.to_sym, row.fetch(:data).to_f]}.to_h]}.to_h
     end
+    # binding.pry
+
     @third_grade_test_scores_repo
-    binding.pry
-    repo_builder(@third_grade_test_scores_repo, groups, :integer)
+    # repo_builder(@third_grade_test_scores_repo, groups, :integer)
   end
 
-  load_third_grade_students
-
+  # load_third_grade_students
 end
