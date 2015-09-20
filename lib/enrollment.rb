@@ -1,5 +1,5 @@
 class Enrollment
-  attr_reader :annual_enrollment, :enrollment
+  attr_reader :annual_enrollment, :enrollment, :data
 
   def initialize(data)
     @data = data
@@ -60,4 +60,40 @@ class Enrollment
   def dropout_rate_in_year(year)
     @data.fetch(:dropout_rate_by_race).fetch(year).fetch(:all_students)
   end
+
+  def except(*keys)
+    dup.except!(*keys)
+  end
+
+  def dropout_rate_by_gender_in_year(year)
+    wanted_keys = [:female, :male]
+    @data.fetch(:dropout_rate_by_race).fetch(year).select { |key,_| wanted_keys.include? key }
+  end
+
+  def dropout_rate_by_race_in_year(year)
+    wanted_keys = [ :asian,
+                    :black,
+                    :pacific_islander,
+                    :hispanic,
+                    :native_american,
+                    :two_or_more,
+                    :white
+                  ]
+    @data.fetch(:dropout_rate_by_race).fetch(year).select { |key,_| wanted_keys.include? key }
+  end
+
+  def dropout_rate_for_race_or_ethnicity(race)
+    race_data_by_year = {}
+    @data.fetch(:dropout_rate_by_race).each_pair do |key, value|
+      race_data_by_year[key] = value.fetch(race)
+      end
+      race_data_by_year
+  end
 end
+
+
+# class Hash
+#   def select_keys(*args)
+#     select {|k,v| args.include?(k) }
+#   end
+# end

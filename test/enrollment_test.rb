@@ -110,11 +110,42 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, district.enrollment.kindergarten_participation_by_year
   end
 
-  def test_drouput_rate_in_year
+  def test_dropout_rate_in_year
     dr = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv')
     district = dr.find_by_name("ACADEMY 20")
 
     assert_equal 0.002, district.enrollment.dropout_rate_in_year(2011)
+  end
+
+  def test_dropout_rate_by_gender_in_year
+    dr = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv')
+    district = dr.find_by_name("ACADEMY 20")
+    expected_result = {:female=>0.002, :male=>0.002}
+
+    assert_equal expected_result, district.enrollment.dropout_rate_by_gender_in_year(2011)
+  end
+
+  def test_dropout_rate_by_race_in_year
+    dr = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv')
+    district = dr.find_by_name("ACADEMY 20")
+    expected_result = { :native_american=>0.0,
+                        :asian=>0.0,
+                        :black=>0.0,
+                        :hispanic=>0.004,
+                        :white=>0.002,
+                        :pacific_islander=>0.0,
+                        :two_or_more=>0.0
+                      }
+
+    assert_equal expected_result, district.enrollment.dropout_rate_by_race_in_year(2011)
+  end
+
+  def test_dropout_rate_for_race_or_ethnicity
+    dr = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv')
+    district = dr.find_by_name("ACADEMY 20")
+    expected_result = {2011=>0.0, 2012=>0.007}
+
+    assert_equal expected_result, district.enrollment.dropout_rate_for_race_or_ethnicity(:asian)
   end
 
 
