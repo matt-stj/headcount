@@ -126,6 +126,7 @@ class EnrollmentTest < Minitest::Test
     district = dr.find_by_name("ACADEMY 20")
 
     assert_equal 0.002, district.enrollment.dropout_rate_in_year(2011)
+    assert_equal nil, district.enrollment.dropout_rate_in_year(1850)
   end
 
   def test_dropout_rate_by_gender_in_year
@@ -134,6 +135,8 @@ class EnrollmentTest < Minitest::Test
     expected_result = {:female=>0.002, :male=>0.002}
 
     assert_equal expected_result, district.enrollment.dropout_rate_by_gender_in_year(2011)
+    assert_equal nil, district.enrollment.dropout_rate_by_gender_in_year(1776)
+
   end
 
   def test_dropout_rate_by_race_in_year
@@ -149,6 +152,8 @@ class EnrollmentTest < Minitest::Test
                       }
 
     assert_equal expected_result, district.enrollment.dropout_rate_by_race_in_year(2011)
+    assert_equal nil, district.enrollment.dropout_rate_by_race_in_year(1442)
+
   end
 
   def test_dropout_rate_for_race_or_ethnicity
@@ -157,6 +162,13 @@ class EnrollmentTest < Minitest::Test
     expected_result = {2011=>0.0, 2012=>0.007}
 
     assert_equal expected_result, district.enrollment.dropout_rate_for_race_or_ethnicity(:asian)
+    assert_raises(UnknownDataError) { district.enrollment.dropout_rate_for_race_or_ethnicity(:alien) }
+
+  def test_dropout_rate_for_race_or_ethnicity_in_year
+    dr = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv')
+    district = dr.find_by_name("ACADEMY 20")
+
+    assert_equal 0.007, district.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:asian, 2012)
   end
 
 
@@ -174,4 +186,5 @@ class EnrollmentTest < Minitest::Test
   #                 2013 => 0.030,
   #                 2014 => 0.030}, district.enrollment.participation_by_race_or_ethnicity(:asian)
   # end
+end
 end

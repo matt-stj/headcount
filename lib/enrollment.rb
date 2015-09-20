@@ -1,3 +1,6 @@
+class UnknownDataError < StandardError
+end
+
 class Enrollment
   attr_reader :annual_enrollment, :enrollment, :data
 
@@ -60,12 +63,22 @@ class Enrollment
   ## FOR ALL BELOW  - RETURN NIL WHEN NO VALUE AND ERROR MESSAGE WHEN NEEDED
 
   def dropout_rate_in_year(year)
-    @data.fetch(:dropout_rate_by_race).fetch(year).fetch(:all_students)
+    data = @data.fetch(:dropout_rate_by_race)
+    if data.has_key?(year)
+      data.fetch(year).fetch(:all_students)
+    else
+      nil
+    end
   end
 
   def dropout_rate_by_gender_in_year(year)
     wanted_keys = [:female, :male]
-    @data.fetch(:dropout_rate_by_race).fetch(year).select { |key,_| wanted_keys.include? key }
+    data = @data.fetch(:dropout_rate_by_race)
+    if data.has_key?(year)
+      data.fetch(year).select { |key,_| wanted_keys.include? key }
+    else
+      nil
+    end
   end
 
   def dropout_rate_by_race_in_year(year)
@@ -77,29 +90,31 @@ class Enrollment
                     :two_or_more,
                     :white
                   ]
-    @data.fetch(:dropout_rate_by_race).fetch(year).select { |key,_| wanted_keys.include? key }
+    data = @data.fetch(:dropout_rate_by_race)
+    if data.has_key?(year)
+      data.fetch(year).select { |key,_| wanted_keys.include? key }
+    else
+      nil
+    end
   end
 
   def dropout_rate_for_race_or_ethnicity(race)
+    data = @data.fetch(:dropout_rate_by_race)
     race_data_by_year = {}
-    @data.fetch(:dropout_rate_by_race).each_pair do |key, value|
-      race_data_by_year[key] = value.fetch(race)
+    data.each_pair do |key, value|
+      if value.has_key?(race) == false
+        raise UnknownDataError
       end
-      race_data_by_year
+        race_data_by_year[key] = value.fetch(race)
+    end
+    race_data_by_year
   end
 
-  def dropout_rate_for_race_or_ethnicity(race)
-    race_data_by_year = {}
-    @data.fetch(:dropout_rate_by_race).each_pair do |key, value|
-      race_data_by_year[key] = value.fetch(race)
-      end
-      race_data_by_year
+
+
+  def dropout_rate_for_race_or_ethnicity_in_year(race, year)
+    years = dropout_rate_for_race_or_ethnicity(race)
+    years.fetch(year)
   end
+
 end
-
-
-# class Hash
-#   def select_keys(*args)
-#     select {|k,v| args.include?(k) }
-#   end
-# end
