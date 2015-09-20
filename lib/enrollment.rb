@@ -88,15 +88,25 @@ class Enrollment
       race_data_by_year
   end
 
-  def dropout_rate_for_race_or_ethnicity(race)
+  def dropout_rate_for_race_or_ethnicity_in_year(race, year)
+    years = dropout_rate_for_race_or_ethnicity(race)
+    years.fetch(year)
+  end
+
+  def participation_by_race_or_ethnicity(race)
     race_data_by_year = {}
-    @data.fetch(:dropout_rate_by_race).each_pair do |key, value|
+      @data.fetch(:enrollment_by_race).each_pair do |key, value|
       race_data_by_year[key] = value.fetch(race)
       end
-      race_data_by_year
+      race_data_by_year.each_pair do |key, value|
+      if value > 1
+        race_data_by_year[key] = (value/participation_in_year(key)).to_s[0..4].to_f
+      end
+    end
+    race_data_by_year
   end
-end
 
+end
 
 # class Hash
 #   def select_keys(*args)

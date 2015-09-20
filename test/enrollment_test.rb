@@ -159,6 +159,13 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, district.enrollment.dropout_rate_for_race_or_ethnicity(:asian)
   end
 
+  def test_participation_by_race_or_ethnicity
+    dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
+    district = dr.find_by_name("ALAMOSA RE-11J")
+    expected_result = {2007=>0.59,2008=>0.594,2009=>0.607,2010=>0.64,2011=>0.636, 2012=>0.649, 2013=>0.662, 2014=>0.671}
+
+    assert_equal expected_result, district.enrollment.participation_by_race_or_ethnicity(:hispanic)
+  end
 
   # def test_participation_by_race_or_ethnicity
   #   skip

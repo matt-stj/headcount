@@ -13,6 +13,16 @@ class EnrollmentLoader
             :female => "FEMALE STUDENTS"
           }
 
+  RACES = {:asian=>"ASIAN STUDENTS",
+          :black=>"BLACK STUDENTS",
+          :pacific_islander=>"NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER",
+          :hispanic=>"HISPANIC STUDENTS",
+          :two_or_more=>"TWO OR MORE RACES",
+          :white => "WHITE STUDENTS",
+          :native_american => "AMERICAN INDIAN STUDENTS",
+          :total => "TOTAL"
+          }
+
   def self.path
     File.expand_path '../data', __dir__
   end
@@ -101,5 +111,28 @@ class EnrollmentLoader
       repo_data[location.upcase][:enrollment][:dropout_rate_by_race] = hash[location]
     end
   end
+
+  def self.load_pupil_enrollment_by_race_ethnicity(path, repo_data)
+    rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    grouped_rows = rows.group_by { |row|  row.fetch(:location) }
+    hash = {}
+    location_with_years = grouped_rows.map do |location, rows|
+      hash[location] = rows.group_by {|row|
+        row.fetch(:timeframe).to_i
+      }
+      .map {|year, rows|
+        [year,
+          rows.map {|row|
+            [ RACES.key(row.fetch(:race).upcase),
+              row.fetch(:data).to_s[0..4].to_f
+            ]
+          }.to_h
+        ]
+      }.to_h
+      repo_data[location.upcase] ||= {enrollment: {enrollment_by_race: {}}}
+      repo_data[location.upcase][:enrollment][:enrollment_by_race] = hash[location]
+    end
+  end
+
 
 end

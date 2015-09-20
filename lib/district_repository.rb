@@ -29,14 +29,8 @@ class DistrictRepository < EnrollmentLoader
     load_special_education(path, repo_data)
     load_high_school_graduation_rates(path, repo_data)
     load_dropout_rates_by_race(path, repo_data)
+    load_pupil_enrollment_by_race_ethnicity(path, repo_data)
     repo = DistrictRepository.new(repo_data)
-    if file == '/Pupil enrollment by race_ethnicity.csv'
-      load_pupil_enrollment_by_race_ethnicity
-      repo = DistrictRepository.new(@pupil_enrollment_by_race_ethnicity_repo)
-    # elsif file == '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv'
-    #   load_third_grade_students
-    #   repo = DistrictRepository.new(@third_grade_test_scores_repo)
-    end
     repo
   end
 
