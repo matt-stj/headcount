@@ -131,4 +131,21 @@ class Enrollment
     end
   end
 
+  def participation_by_race_or_ethnicity(race)
+    race_data_by_year = {}
+      @data.fetch(:enrollment_by_race).each_pair do |key, value|
+      race_data_by_year[key] = value.fetch(race)
+      end
+      race_data_by_year.each_pair do |key, value|
+      if value > 1
+        race_data_by_year[key] = (value/participation_in_year(key)).to_s[0..5].to_f.round(3)
+      end
+    end
+    race_data_by_year
+  end
+
+  def participation_by_race_or_ethnicity_in_year(year)
+    @data.fetch(:enrollment_by_race).fetch(year)
+  end
+
 end
