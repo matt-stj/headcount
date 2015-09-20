@@ -160,25 +160,22 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_participation_by_race_or_ethnicity
-    dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
-    district = dr.find_by_name("ALAMOSA RE-11J")
-    expected_result = {2007=>0.59,2008=>0.594,2009=>0.607,2010=>0.64,2011=>0.636, 2012=>0.649, 2013=>0.662, 2014=>0.671}
+    alamosa = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("ALAMOSA RE-11J")
+    # colorado = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("COLORADO")
 
-    assert_equal expected_result, district.enrollment.participation_by_race_or_ethnicity(:hispanic)
+    expected_result_1 = {2007=>0.59,2008=>0.594,2009=>0.607,2010=>0.64,2011=>0.636, 2012=>0.649, 2013=>0.662, 2014=>0.671}
+    # expected_result_2 = {2007=>0.034,2008 =>0.036,2009 =>0.037,2010 =>0.030,2011 =>0.031,2012 =>0.032,2013 =>0.030,2014=>0.030}
+
+    assert_equal expected_result_1, alamosa.enrollment.participation_by_race_or_ethnicity(:hispanic)
+    # assert_equal expected_result_2, colorado.enrollment.participation_by_race_or_ethnicity(:asian)
   end
 
-  # def test_participation_by_race_or_ethnicity
-  #   skip
-  #   dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
-  #   district = dr.find_by_name("Colorado")
-  #   district.participation_by_race_or_ethnicity('asian students')
-  #   assert_equal {2007 => 0.034,
-  #                 2008 => 0.036,
-  #                 2009 => 0.037,
-  #                 2010 => 0.030,
-  #                 2011 => 0.031,
-  #                 2012 => 0.032,
-  #                 2013 => 0.030,
-  #                 2014 => 0.030}, district.enrollment.participation_by_race_or_ethnicity(:asian)
-  # end
+  def test_participation_by_race_or_ethnicity_in_year
+    aspen = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("ASPEN 1")
+
+    expected_result = {:native_american=>0.0,:asian=>0.02,:black=>0.01,:hispanic=>0.12,:white=>0.85,:pacific_islander=>0.0,:two_or_more=>0.0}
+
+    assert_equal expected_result, aspen.enrollment.participation_by_race_or_ethnicity_in_year(2007)
+  end
+
 end
