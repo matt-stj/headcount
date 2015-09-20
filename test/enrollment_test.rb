@@ -3,48 +3,59 @@ require 'pry'
 
 class EnrollmentTest < Minitest::Test
   def test_participation_in_year
-    dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
-    district = dr.find_by_name("ACADEMY 20")
+    colorado = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("COLORADO")
+    academy_20 = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ACADEMY 20")
 
-    assert_equal 23973, district.enrollment.participation_in_year(2012)
+    assert_equal 832368, colorado.enrollment.participation_in_year(2009)
+    assert_equal 854265, colorado.enrollment.participation_in_year(2011)
+    assert_equal 889006, colorado.enrollment.participation_in_year(2014)
+
+    assert_equal 23973, academy_20.enrollment.participation_in_year(2012)
+    assert_equal 24578, academy_20.enrollment.participation_in_year(2014)
+    assert_equal 22620, academy_20.enrollment.participation_in_year(2009)
   end
 
   def test_participation_by_year
-    dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
-    district = dr.find_by_name("ACADEMY 20")
-    expected_result = {2009=>22620,2010=>23119,2011=>23657,2012=>23973,2013=>24481,2014=>24578}
+    adams_arapahoe = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ADAMS-ARAPAHOE 28J")
+    adams_county = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ADAMS COUNTY 14")
 
-    assert_equal expected_result, district.enrollment.participation_by_year
+    expected_result_1 = {2009=>36967,2010=>38605,2011=>39696,2012=>39835,2013=>40877,2014=>41729}
+    expected_result_2 = {2009=>7422,2010=>7549,2011=>7321,2012=>7500,2013=>7598,2014=>7584}
+
+    assert_equal expected_result_1, adams_arapahoe.enrollment.participation_by_year
+    assert_equal expected_result_2, adams_county.enrollment.participation_by_year
   end
 
   def test_online_participation_in_year
-    dr = DistrictRepository.from_csv('/Online pupil enrollment.csv')
-    district = dr.find_by_name("ACADEMY 20")
+    boulder = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BOULDER VALLEY RE 2")
+    branson = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BRANSON REORGANIZED 82")
 
-    assert_equal 341, district.enrollment.online_participation_in_year(2013)
+    assert_equal 121, boulder.enrollment.online_participation_in_year(2011)
+    assert_equal 136, boulder.enrollment.online_participation_in_year(2012)
+
+    assert_equal 409, branson.enrollment.online_participation_in_year(2011)
+    assert_equal 436, branson.enrollment.online_participation_in_year(2013)
   end
 
   def test_online_participation_by_year
-    dr = DistrictRepository.from_csv('/Online pupil enrollment.csv')
-    district = dr.find_by_name("ACADEMY 20")
-    expected_result = {2011=>33,2012=>35,2013=>341}
+    byers = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BYERS 32J")
+    canon_city = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("CANON CITY RE-1")
+    expected_result_1 = {2011=>0,2012=>83,2013=>135}
+    expected_result_2 = {2011=>66,2012=>48,2013=>45}
 
-    assert_equal expected_result, district.enrollment.online_participation_by_year
+    assert_equal expected_result_1, byers.enrollment.online_participation_by_year
+    assert_equal expected_result_2, canon_city.enrollment.online_participation_by_year
   end
 
   def test_graduation_rate_in_year
-    dr = DistrictRepository.from_csv('/High school graduation rates.csv')
-    district = dr.find_by_name("ACADEMY 20")
+    colorado = DistrictRepository.from_csv('/High school graduation rates.csv').find_by_name("COLORADO")
+    academy_20 = DistrictRepository.from_csv('/High school graduation rates.csv').find_by_name("ACADEMY 20")
 
-    assert_equal 0.895, district.enrollment.graduation_rate_in_year(2010)
-  end
+    assert_equal 0.753, colorado.enrollment.graduation_rate_in_year(2012)
+    assert_equal 0.773, colorado.enrollment.graduation_rate_in_year(2014)
 
-  def test_graduation_rate_by_year
-    dr = DistrictRepository.from_csv('/High school graduation rates.csv')
-    district = dr.find_by_name("ACADEMY 20")
-    expected_result = {2010=>0.895,2011=>0.895,2012=>0.889,2013=>0.913,2014=>0.898}
-
-    assert_equal expected_result, district.enrollment.graduation_rate_by_year
+    assert_equal 0.895, academy_20.enrollment.graduation_rate_in_year(2010)
+    assert_equal 0.913, academy_20.enrollment.graduation_rate_in_year(2013)
   end
 
   def test_edge_case_truncate_floats
