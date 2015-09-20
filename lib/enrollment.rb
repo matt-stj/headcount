@@ -56,7 +56,8 @@ class Enrollment
   def kindergarten_participation_by_year
     @data.fetch(:kindergartner_enrollment)
   end
-  # def participation_by_race_or_ethnicity(race)
-  #
-  # end
+
+  def dropout_rate_in_year(year)
+    @data.fetch(:dropout_rate_by_race).fetch(year).fetch(:all_students)
+  end
 end

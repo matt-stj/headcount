@@ -110,6 +110,13 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, district.enrollment.kindergarten_participation_by_year
   end
 
+  def test_drouput_rate_in_year
+    dr = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv')
+    district = dr.find_by_name("ACADEMY 20")
+
+    assert_equal 0.002, district.enrollment.dropout_rate_in_year(2011)
+  end
+
 
   # def test_participation_by_race_or_ethnicity
   #   skip
