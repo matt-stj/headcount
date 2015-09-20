@@ -9,6 +9,7 @@ class EnrollmentTest < Minitest::Test
     assert_equal 832368, colorado.enrollment.participation_in_year(2009)
     assert_equal 854265, colorado.enrollment.participation_in_year(2011)
     assert_equal 889006, colorado.enrollment.participation_in_year(2014)
+    assert_equal nil, colorado.enrollment.participation_in_year(4000)
 
     assert_equal 23973, academy_20.enrollment.participation_in_year(2012)
     assert_equal 24578, academy_20.enrollment.participation_in_year(2014)
@@ -32,6 +33,7 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal 121, boulder.enrollment.online_participation_in_year(2011)
     assert_equal 136, boulder.enrollment.online_participation_in_year(2012)
+    assert_equal nil, boulder.enrollment.online_participation_in_year(2042)
 
     assert_equal 409, branson.enrollment.online_participation_in_year(2011)
     assert_equal 436, branson.enrollment.online_participation_in_year(2013)
@@ -53,6 +55,7 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal 0.753, colorado.enrollment.graduation_rate_in_year(2012)
     assert_equal 0.773, colorado.enrollment.graduation_rate_in_year(2014)
+    assert_equal nil, colorado.enrollment.graduation_rate_in_year(1245)
 
     assert_equal 0.895, academy_20.enrollment.graduation_rate_in_year(2010)
     assert_equal 0.913, academy_20.enrollment.graduation_rate_in_year(2013)
@@ -86,6 +89,7 @@ class EnrollmentTest < Minitest::Test
     district = dr.find_by_name("ADAMS-ARAPAHOE 28J")
 
     assert_equal 0.614, district.enrollment.remediation_in_year(2010)
+    assert_equal nil, district.enrollment.remediation_in_year(3010)
   end
 
   def test_remediation_by_year
@@ -101,6 +105,7 @@ class EnrollmentTest < Minitest::Test
     district = dr.find_by_name("ACADEMY 20")
 
     assert_equal 0.391, district.enrollment.kindergarten_participation_in_year(2007)
+    assert_equal nil, district.enrollment.kindergarten_participation_in_year(1776)
   end
 
   def test_kindergartners_participation_by_year

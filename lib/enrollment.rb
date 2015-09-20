@@ -8,12 +8,21 @@ class Enrollment
     @data = data
   end
 
+  def return_nil_when_cant_fetch(year, data)
+    if data.has_key?(year)
+      data.fetch(year)
+    else
+      nil
+    end
+  end
+
   def in_year(year)
     participation_by_year.fetch(year)
   end
 
   def participation_in_year(year)
-    participation_by_year.fetch(year)
+    data = participation_by_year
+    return_nil_when_cant_fetch(year, data)
   end
 
   def participation_by_year
@@ -21,7 +30,8 @@ class Enrollment
   end
 
   def online_participation_in_year(year)
-    online_participation_by_year.fetch(year)
+    data = online_participation_by_year
+    return_nil_when_cant_fetch(year, data)
   end
 
   def online_participation_by_year
@@ -29,7 +39,8 @@ class Enrollment
   end
 
   def graduation_rate_in_year(year)
-    graduation_rate_by_year.fetch(year)
+    data = graduation_rate_by_year
+    return_nil_when_cant_fetch(year, data)
   end
 
   def graduation_rate_by_year
@@ -37,7 +48,8 @@ class Enrollment
   end
 
   def special_education_in_year(year)
-    special_education_by_year.fetch(year)
+    data = special_education_by_year
+    return_nil_when_cant_fetch(year, data)
   end
 
   def special_education_by_year
@@ -45,7 +57,8 @@ class Enrollment
   end
 
   def remediation_in_year(year)
-    remediation_by_year.fetch(year)
+    data = remediation_by_year
+    return_nil_when_cant_fetch(year, data)
   end
 
   def remediation_by_year
@@ -53,14 +66,13 @@ class Enrollment
   end
 
   def kindergarten_participation_in_year(year)
-    kindergarten_participation_by_year.fetch(year)
+    data = kindergarten_participation_by_year
+    return_nil_when_cant_fetch(year, data)
   end
 
   def kindergarten_participation_by_year
     @data.fetch(:kindergartner_enrollment)
   end
-
-  ## FOR ALL BELOW  - RETURN NIL WHEN NO VALUE AND ERROR MESSAGE WHEN NEEDED
 
   def dropout_rate_in_year(year)
     data = @data.fetch(:dropout_rate_by_race)
