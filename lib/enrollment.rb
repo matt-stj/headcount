@@ -110,11 +110,13 @@ class Enrollment
     race_data_by_year
   end
 
-
-
   def dropout_rate_for_race_or_ethnicity_in_year(race, year)
     years = dropout_rate_for_race_or_ethnicity(race)
-    years.fetch(year)
+    if years.has_key?(year)
+      years.fetch(year)
+    else
+      nil
+    end
   end
 
 end

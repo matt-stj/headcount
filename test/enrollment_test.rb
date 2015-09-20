@@ -163,28 +163,31 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal expected_result, district.enrollment.dropout_rate_for_race_or_ethnicity(:asian)
     assert_raises(UnknownDataError) { district.enrollment.dropout_rate_for_race_or_ethnicity(:alien) }
+  end
 
-  def test_dropout_rate_for_race_or_ethnicity_in_year
+  def test_dropout_rate_for_race_or_ethnicity_in_year_z
     dr = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv')
     district = dr.find_by_name("ACADEMY 20")
 
     assert_equal 0.007, district.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:asian, 2012)
+    assert_raises(UnknownDataError) { district.enrollment.dropout_rate_for_race_or_ethnicity(:alien) }
+    assert_equal nil, district.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:asian, 1950)
+
   end
 
+end
 
-  # def test_participation_by_race_or_ethnicity
-  #   skip
-  #   dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
-  #   district = dr.find_by_name("Colorado")
-  #   district.participation_by_race_or_ethnicity('asian students')
-  #   assert_equal {2007 => 0.034,
-  #                 2008 => 0.036,
-  #                 2009 => 0.037,
-  #                 2010 => 0.030,
-  #                 2011 => 0.031,
-  #                 2012 => 0.032,
-  #                 2013 => 0.030,
-  #                 2014 => 0.030}, district.enrollment.participation_by_race_or_ethnicity(:asian)
-  # end
-end
-end
+# def test_participation_by_race_or_ethnicity
+#   skip
+#   dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
+#   district = dr.find_by_name("Colorado")
+#   district.participation_by_race_or_ethnicity('asian students')
+#   assert_equal {2007 => 0.034,
+#                 2008 => 0.036,
+#                 2009 => 0.037,
+#                 2010 => 0.030,
+#                 2011 => 0.031,
+#                 2012 => 0.032,
+#                 2013 => 0.030,
+#                 2014 => 0.030}, district.enrollment.participation_by_race_or_ethnicity(:asian)
+# end
