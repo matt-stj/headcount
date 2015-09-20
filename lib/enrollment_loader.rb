@@ -102,14 +102,4 @@ class EnrollmentLoader
     end
   end
 
-
-
-
-
-  # def self.load_pupil_enrollment_by_race_ethnicity
-  #   rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
-  #   groups = group_by(rows)
-  #   @pupil_enrollment_race_ethnicity_repo = {}
-  #   repo_builder_extreme(@pupil_enrollment_race_ethnicity_repo, groups, :float)
-  # end
 end

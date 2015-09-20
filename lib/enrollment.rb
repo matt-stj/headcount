@@ -57,12 +57,10 @@ class Enrollment
     @data.fetch(:kindergartner_enrollment)
   end
 
+  ## FOR ALL BELOW  - RETURN NIL WHEN NO VALUE AND ERROR MESSAGE WHEN NEEDED
+
   def dropout_rate_in_year(year)
     @data.fetch(:dropout_rate_by_race).fetch(year).fetch(:all_students)
-  end
-
-  def except(*keys)
-    dup.except!(*keys)
   end
 
   def dropout_rate_by_gender_in_year(year)
@@ -80,6 +78,14 @@ class Enrollment
                     :white
                   ]
     @data.fetch(:dropout_rate_by_race).fetch(year).select { |key,_| wanted_keys.include? key }
+  end
+
+  def dropout_rate_for_race_or_ethnicity(race)
+    race_data_by_year = {}
+    @data.fetch(:dropout_rate_by_race).each_pair do |key, value|
+      race_data_by_year[key] = value.fetch(race)
+      end
+      race_data_by_year
   end
 
   def dropout_rate_for_race_or_ethnicity(race)
