@@ -1,6 +1,4 @@
-require_relative 'statewide_loader'
-
-class EnrollmentLoader
+class LoadFromCSVS
   RACES_AND_SEXES = { :all_students => "ALL STUDENTS",
             :asian=>"ASIAN STUDENTS",
             :black=>"BLACK STUDENTS",
@@ -134,5 +132,26 @@ class EnrollmentLoader
     end
   end
 
-
+  # def self.load_third_grade_students(path, repo_data)
+  #   rows = CSV.readlines(path + '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  #   grouped_rows = rows.group_by { |row| row.fetch(:location)}
+  #   hash = {}
+  #   location_with_years = grouped_rows.map do |location, rows|
+  #     hash[location] = rows.group_by {|row|
+  #       row.fetch(:timeframe).to_i
+  #     }
+  #     .map {|year, rows|
+  #       [year,
+  #         rows.map {|row|
+  #           [ row.fetch(:score).downcase.to_sym,
+  #             row.fetch(:data).to_s[0..4].to_f
+  #           ]
+  #         }.to_h
+  #       ]
+  #     }.to_h
+  #     repo_data[location.upcase] ||= {enrollment: {third_grade_proficiency: {}}}
+  #     repo_data[location.upcase][:enrollment][:third_grade_proficiency] = hash[location]
+  #   end
+  #   binding.pry
+  # end
 end

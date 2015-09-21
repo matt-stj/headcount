@@ -5,8 +5,8 @@ require_relative 'enrollment'
 require_relative 'district'
 require_relative 'statewide'
 
-class DistrictRepository < EnrollmentLoader
-  attr_reader :path, :districts, :name, :online_enrollment_pupil_repo
+class DistrictRepository < LoadFromCSVS
+  attr_reader :districts, :statewide_testing
 
   def self.from_csv(file_or_path)
     # eventually we should just receive the path and not have this stuff
@@ -30,6 +30,7 @@ class DistrictRepository < EnrollmentLoader
     load_high_school_graduation_rates(path, repo_data)
     load_dropout_rates_by_race(path, repo_data)
     load_pupil_enrollment_by_race_ethnicity(path, repo_data)
+    # load_third_grade_students(path, repo_data)
     repo = DistrictRepository.new(repo_data)
     repo
   end
