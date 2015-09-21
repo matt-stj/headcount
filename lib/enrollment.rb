@@ -172,6 +172,4 @@ class Enrollment
     end
   end
 
-  def 
-
 end
