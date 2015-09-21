@@ -149,7 +149,6 @@ class Enrollment
   end
 
 
-
   def proficient_by_grade(grade)
     if grade == 3
       @data.fetch(:third_grade_proficiency)

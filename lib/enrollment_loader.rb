@@ -161,7 +161,8 @@ class LoadFromCSVS
   #   end
   #   binding.pry
   # end
-  ####### Begin STATEWIDE ----------------------
+
+  ####### BEGIN STATEWIDE ----------------------
 
 
   def self.statewide_testing_load_third_grade_students(path, repo_data)
@@ -302,7 +303,7 @@ class LoadFromCSVS
 
     # END STATEWIDE ----------------------
 
-    # BEGINECONOMIC PROFILE -------------
+    # BEGIN ECONOMIC PROFILE -------------
 
     def self.load_median_household_income(path, repo_data)
       rows = CSV.readlines(path + '/Median household income.csv', headers: true, header_converters: :symbol).map(&:to_h)
@@ -340,5 +341,6 @@ class LoadFromCSVS
       end
     end
 
+  #######END ECONOMIC -----------------------
 
 end

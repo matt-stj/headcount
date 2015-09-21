@@ -15,6 +15,8 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, district.enrollment.graduation_rate_by_year
   end
 
+  ##Will eventually go to Statewide###
+
   def test_proficient_by_grade_third_grade
     dr = DistrictRepository.from_csv("THIS NEEDS TO BE SOMETHING?")
     academy_20 = dr.find_by_name("ACADEMY 20")
@@ -70,6 +72,8 @@ class EnrollmentTest < Minitest::Test
     assert_equal 0.747, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:writing, 8, 2014)
     assert_equal 0.832, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
   end
+
+  ##End of statwide -- beginning of Enrollment##
 
   def test_participation_in_year
     colorado = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("COLORADO")
@@ -441,7 +445,7 @@ class EnrollmentTest < Minitest::Test
 
   def test_participation_by_race_or_ethnicity
     alamosa = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("ALAMOSA RE-11J")
-    # colorado = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("COLORADO")
+    colorado = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("COLORADO")
 
     expected_result_1 = {2007=>0.59,
                          2008=>0.594,
@@ -452,18 +456,18 @@ class EnrollmentTest < Minitest::Test
                          2013=>0.662,
                          2014=>0.671
                        }
-    # expected_result_2 = {2007=>0.034,
-    #                      2008 =>0.036,
-    #                      2009 =>0.037,
-    #                      2010 =>0.030,
-    #                      2011 =>0.031,
-    #                      2012 =>0.032,
-    #                      2013 =>0.030,
-    #                      2014=>0.030
-    #                     }
+    expected_result_2 = {2007=>0.034,
+                         2008 =>0.036,
+                         2009 =>0.037,
+                         2010 =>0.030,
+                         2011 =>0.031,
+                         2012 =>0.032,
+                         2013 =>0.030,
+                         2014=>0.030
+                        }
 
     assert_equal expected_result_1, alamosa.enrollment.participation_by_race_or_ethnicity(:hispanic)
-    # assert_equal expected_result_2, colorado.enrollment.participation_by_race_or_ethnicity(:asian)
+    assert_equal expected_result_2, colorado.enrollment.participation_by_race_or_ethnicity(:asian)
   end
 
   def test_participation_by_race_or_ethnicity_in_year
@@ -481,23 +485,6 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, aspen.enrollment.participation_by_race_or_ethnicity_in_year(2007)
   end
 
-  def test_participation_by_race_or_ethnicity
-    skip
-    dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
-    district = dr.find_by_name("Colorado")
-
-    expected_result =  {2007 => 0.034,
-                        2008 => 0.036,
-                        2009 => 0.037,
-                        2010 => 0.030,
-                        2011 => 0.031,
-                        2012 => 0.032,
-                        2013 => 0.030,
-                        2014 => 0.030}
-
-
-    assert_equal expected_result, district.enrollment.participation_by_race_or_ethnicity(:asian)
-  end
   #
   # def test_it_omits_excel_missing_data
   #   woodlin = repo.find_by_name ('WOODLIN R-104')
