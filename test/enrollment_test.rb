@@ -2,9 +2,17 @@ require_relative '../lib/district_repository'
 require 'pry'
 
 class EnrollmentTest < Minitest::Test
+  def path
+    File.expand_path '../data', __dir__
+  end
+
+  def make_a_dr
+    @dr ||= DistrictRepository.from_csv(path)
+  end
+
   def test_edge_case_truncate_floats
-    dr = DistrictRepository.from_csv('/High school graduation rates.csv')
-    district = dr.find_by_name("ACADEMY 20")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
     expected_result = {2010=>0.895,
                        2011=>0.895,
                        2012=>0.889,
@@ -12,14 +20,15 @@ class EnrollmentTest < Minitest::Test
                        2014=>0.898
                      }
 
-    assert_equal expected_result, district.enrollment.graduation_rate_by_year
+    assert_equal expected_result, academy_20.enrollment.graduation_rate_by_year
   end
 
-  ##Will eventually go to Statewide###
+  #Will eventually go to Statewide###
 
   def test_proficient_by_grade_third_grade
-    dr = DistrictRepository.from_csv("THIS NEEDS TO BE SOMETHING?")
-    academy_20 = dr.find_by_name("ACADEMY 20")
+    skip
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
 
     expected_result =  { 2008=>{:math=>0.857, :reading=>0.866, :writing=>0.671},
                          2009=>{:math=>0.824, :reading=>0.862, :writing=>0.706},
@@ -35,8 +44,8 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_proficient_by_grade_eigth_grade
-    dr = DistrictRepository.from_csv("THIS SHOULD PROBABLY BE SOMETHING TOO")
-    academy_20 = dr.find_by_name("ACADEMY 20")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
     expected_result =  { 2008=>{:math=>0.64, :reading=>0.843, :writing=>0.734},
                          2009=>{:math=>0.656, :reading=>0.825, :writing=>0.701},
                          2010=>{:math=>0.672, :reading=>0.863, :writing=>0.754},
@@ -51,7 +60,8 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_proficient_for_subject_in_year
-    dr = DistrictRepository.from_csv("THIS SHOULD PROBABLY BE SOMETHING TOO")
+    make_a_dr
+    dr = @dr
     academy_20 = dr.find_by_name("ACADEMY 20")
 
     assert_equal 0.680, academy_20.enrollment.proficient_for_subject_in_year(:math, 2011)
@@ -62,7 +72,8 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_proficient_for_subject_by_grade_eigth_grade
-    dr = DistrictRepository.from_csv("THIS SHOULD PROBABLY BE SOMETHING TOO")
+    make_a_dr
+    dr = @dr
     academy_20 = dr.find_by_name("ACADEMY 20")
     #should be district.statewide.method_name
     assert_equal 0.681, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:math, 8, 2012)
@@ -76,8 +87,9 @@ class EnrollmentTest < Minitest::Test
   ##End of statwide -- beginning of Enrollment##
 
   def test_participation_in_year
-    colorado = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("COLORADO")
-    academy_20 = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ACADEMY 20")
+    make_a_dr
+    colorado = @dr.find_by_name("COLORADO")
+    academy_20 = @dr.find_by_name("ACADEMY 20")
 
     assert_equal 832368, colorado.enrollment.participation_in_year(2009)
     assert_equal 854265, colorado.enrollment.participation_in_year(2011)
@@ -89,16 +101,18 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_participation_in_year_returns_nil_if_the_year_isnt_found
-    colorado = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("COLORADO")
-    academy_20 = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ACADEMY 20")
+    make_a_dr
+    colorado = @dr.find_by_name("COLORADO")
+    academy_20 = @dr.find_by_name("ACADEMY 20")
 
     assert_equal nil, colorado.enrollment.participation_in_year(4000)
     assert_equal nil, academy_20.enrollment.participation_in_year(2489)
   end
 
   def test_participation_by_year
-    adams_arapahoe = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ADAMS-ARAPAHOE 28J")
-    adams_county = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ADAMS COUNTY 14")
+    make_a_dr
+    adams_arapahoe = @dr.find_by_name("ADAMS-ARAPAHOE 28J")
+    adams_county = @dr.find_by_name("ADAMS COUNTY 14")
 
     expected_result_1 = {2009=>36967,
                          2010=>38605,
@@ -120,8 +134,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_online_participation_in_year
-    boulder = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BOULDER VALLEY RE 2")
-    branson = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BRANSON REORGANIZED 82")
+    make_a_dr
+    boulder = @dr.find_by_name("BOULDER VALLEY RE 2")
+    branson = @dr.find_by_name("BRANSON REORGANIZED 82")
 
     assert_equal 121, boulder.enrollment.online_participation_in_year(2011)
     assert_equal 136, boulder.enrollment.online_participation_in_year(2012)
@@ -131,8 +146,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_online_participation_in_year_returns_nil_if_the_year_isnt_found
-    boulder = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BOULDER VALLEY RE 2")
-    branson = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BRANSON REORGANIZED 82")
+    make_a_dr
+    boulder = @dr.find_by_name("BOULDER VALLEY RE 2")
+    branson = @dr.find_by_name("BRANSON REORGANIZED 82")
 
     assert_equal nil, boulder.enrollment.online_participation_in_year(2042)
     assert_equal nil, branson.enrollment.online_participation_in_year(4328)
@@ -140,8 +156,9 @@ class EnrollmentTest < Minitest::Test
 
 
   def test_online_participation_by_year
-    byers = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("BYERS 32J")
-    canon_city = DistrictRepository.from_csv('/Online pupil enrollment.csv').find_by_name("CANON CITY RE-1")
+    make_a_dr
+    byers = @dr.find_by_name("BYERS 32J")
+    canon_city = @dr.find_by_name("CANON CITY RE-1")
     expected_result_1 = {2011=>0,
                          2012=>83,
                          2013=>135
@@ -156,8 +173,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_graduation_rate_in_year
-    colorado = DistrictRepository.from_csv('/High school graduation rates.csv').find_by_name("COLORADO")
-    academy_20 = DistrictRepository.from_csv('/High school graduation rates.csv').find_by_name("ACADEMY 20")
+    make_a_dr
+    colorado = @dr.find_by_name("COLORADO")
+    academy_20 = @dr.find_by_name("ACADEMY 20")
 
     assert_equal 0.753, colorado.enrollment.graduation_rate_in_year(2012)
     assert_equal 0.773, colorado.enrollment.graduation_rate_in_year(2014)
@@ -167,16 +185,18 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_graduation_rate_in_year_returns_nil_if_the_year_isnt_found
-    colorado = DistrictRepository.from_csv('/High school graduation rates.csv').find_by_name("COLORADO")
-    academy_20 = DistrictRepository.from_csv('/High school graduation rates.csv').find_by_name("ACADEMY 20")
+    make_a_dr
+    colorado = @dr.find_by_name("COLORADO")
+    academy_20 = @dr.find_by_name("ACADEMY 20")
 
     assert_equal nil, colorado.enrollment.graduation_rate_in_year(1245)
     assert_equal nil, academy_20.enrollment.graduation_rate_in_year(9867)
   end
 
   def test_special_education_in_year
-    meeker = DistrictRepository.from_csv('/Special education.csv').find_by_name("MEEKER RE1")
-    cotopaxi = DistrictRepository.from_csv('/Special education.csv').find_by_name("COTOPAXI RE-3")
+    make_a_dr
+    meeker = @dr.find_by_name("MEEKER RE1")
+    cotopaxi = @dr.find_by_name("COTOPAXI RE-3")
 
     assert_equal 0.105, meeker.enrollment.special_education_in_year(2013)
     assert_equal 0.103, meeker.enrollment.special_education_in_year(2012)
@@ -186,8 +206,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_special_education_by_year
-    meeker = DistrictRepository.from_csv('/Special education.csv').find_by_name("MEEKER RE1")
-    delta = DistrictRepository.from_csv('/Special education.csv').find_by_name("DELTA COUNTY 50(J)")
+    make_a_dr
+    meeker = @dr.find_by_name("MEEKER RE1")
+    delta = @dr.find_by_name("DELTA COUNTY 50(J)")
     expected_result_1 = {2009=>0.089,
                        2011=>0.09,
                        2012=>0.103,
@@ -208,8 +229,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_remediation_in_year
-    adams_arapahoe = DistrictRepository.from_csv('/Remediation in higher education.csv').find_by_name("ADAMS-ARAPAHOE 28J")
-    johnstown = DistrictRepository.from_csv('/Remediation in higher education.csv').find_by_name("JOHNSTOWN-MILLIKEN RE-5J")
+    make_a_dr
+    adams_arapahoe = @dr.find_by_name("ADAMS-ARAPAHOE 28J")
+    johnstown = @dr.find_by_name("JOHNSTOWN-MILLIKEN RE-5J")
 
     assert_equal 0.614, adams_arapahoe.enrollment.remediation_in_year(2010)
     assert_equal 0.533, adams_arapahoe.enrollment.remediation_in_year(2011)
@@ -221,9 +243,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_remediation_in_year_returns_nil_if_the_year_isnt_found
-    adams_arapahoe = DistrictRepository.from_csv('/Remediation in higher education.csv').find_by_name("ADAMS-ARAPAHOE 28J")
-    gilpin = DistrictRepository.from_csv('/Remediation in higher education.csv').find_by_name("GILPIN COUNTY RE-1")
-    greeley = DistrictRepository.from_csv('/Remediation in higher education.csv').find_by_name("GREELEY 6")
+    make_a_dr
+    adams_arapahoe = @dr.find_by_name("ADAMS-ARAPAHOE 28J")
+    gilpin = @dr.find_by_name("GILPIN COUNTY RE-1")
+    greeley = @dr.find_by_name("GREELEY 6")
 
     assert_equal nil, adams_arapahoe.enrollment.remediation_in_year(3010)
     assert_equal nil, gilpin.enrollment.remediation_in_year(1)
@@ -231,8 +254,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_remediation_by_year
-    adams_arapahoe = DistrictRepository.from_csv('/Remediation in higher education.csv').find_by_name("ADAMS-ARAPAHOE 28J")
-    harrison = DistrictRepository.from_csv('/Remediation in higher education.csv').find_by_name("HARRISON 2")
+    make_a_dr
+    adams_arapahoe = @dr.find_by_name("ADAMS-ARAPAHOE 28J")
+    harrison = @dr.find_by_name("HARRISON 2")
     expected_result_1 = {2011=>0.533,
                        2010=>0.614,
                        2009=>0.601
@@ -247,9 +271,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_kindergartners_participation_in_year
-    academy_20 = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("ACADEMY 20")
-    falcon = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("FALCON 49")
-    keenesburg = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("KEENESBURG RE-3(J)")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    falcon = @dr.find_by_name("FALCON 49")
+    keenesburg = @dr.find_by_name("KEENESBURG RE-3(J)")
 
     assert_equal 0.391, academy_20.enrollment.kindergarten_participation_in_year(2007)
     assert_equal 0.484, falcon.enrollment.kindergarten_participation_in_year(2008)
@@ -257,9 +282,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_kindergartners_participation_in_year_returns_nil_if_year_isnt_found
-    academy_20 = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("ACADEMY 20")
-    fountain = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("FOUNTAIN 8")
-    haxtun = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("HAXTUN RE-2J")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    fountain = @dr.find_by_name("FOUNTAIN 8")
+    haxtun = @dr.find_by_name("HAXTUN RE-2J")
 
     assert_equal nil, academy_20.enrollment.kindergarten_participation_in_year(1776)
     assert_equal nil, fountain.enrollment.kindergarten_participation_in_year(65)
@@ -267,8 +293,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_kindergartners_participation_by_year
-    adams_arapahoe = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("ADAMS-ARAPAHOE 28J")
-    denver = DistrictRepository.from_csv('/Kindergartners in full-day program.csv').find_by_name("DENVER COUNTY 1")
+    make_a_dr
+    adams_arapahoe = @dr.find_by_name("ADAMS-ARAPAHOE 28J")
+    denver = @dr.find_by_name("DENVER COUNTY 1")
     expected_result_1 = {2007=>0.473,
                        2006=>0.37,
                        2005=>0.201,
@@ -299,9 +326,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_in_year
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    florence = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("FLORENCE RE-2")
-    campo = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("CAMPO RE-6")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    florence = @dr.find_by_name("FLORENCE RE-2")
+    campo = @dr.find_by_name("CAMPO RE-6")
 
     assert_equal 0.002, academy_20.enrollment.dropout_rate_in_year(2011)
     assert_equal 0.025, florence.enrollment.dropout_rate_in_year(2011)
@@ -309,9 +337,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_in_year_returns_nil_if_the_year_isnt_found
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    creede = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("CREEDE CONSOLIDATED 1")
-    eads = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("EADS RE-1")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    creede = @dr.find_by_name("CREEDE CONSOLIDATED 1")
+    eads = @dr.find_by_name("EADS RE-1")
 
     assert_equal nil, academy_20.enrollment.dropout_rate_in_year(1850)
     assert_equal nil, creede.enrollment.dropout_rate_in_year(6532)
@@ -319,9 +348,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_by_gender_in_year
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    brighton = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("BRIGHTON 27J")
-    brush = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("BRUSH RE-2(J)")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    brighton = @dr.find_by_name("BRIGHTON 27J")
+    brush = @dr.find_by_name("BRUSH RE-2(J)")
 
     expected_result_1 = {:female=>0.002,
                        :male=>0.002
@@ -339,9 +369,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_by_gender_in_year_returns_nil_if_year_isnt_found
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    buena_vista = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("BUENA VISTA R-31")
-    buffalo = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("BUFFALO RE-4")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    buena_vista = @dr.find_by_name("BUENA VISTA R-31")
+    buffalo = @dr.find_by_name("BUFFALO RE-4")
 
     assert_equal nil, academy_20.enrollment.dropout_rate_by_gender_in_year(1776)
     assert_equal nil, buena_vista.enrollment.dropout_rate_by_gender_in_year(1111)
@@ -349,8 +380,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_by_race_in_year
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    archuletta = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ARCHULETA COUNTY 50 JT")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    archuletta = @dr.find_by_name("ARCHULETA COUNTY 50 JT")
 
     expected_result_1 = { :native_american=>0.0,
                         :asian=>0.0,
@@ -374,9 +406,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_by_race_in_year_returns_nil_if_the_year_isnt_found
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    gunnison = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("GUNNISON WATERSHED RE1J")
-    east_grand = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("EAST GRAND 2")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    gunnison = @dr.find_by_name("GUNNISON WATERSHED RE1J")
+    east_grand = @dr.find_by_name("EAST GRAND 2")
 
     assert_equal nil, academy_20.enrollment.dropout_rate_by_race_in_year(1442)
     assert_equal nil, gunnison.enrollment.dropout_rate_by_race_in_year(01010011)
@@ -384,9 +417,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_for_race_or_ethnicity
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    park_county = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("PARK COUNTY RE-2")
-    otis = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("OTIS R-3")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    park_county = @dr.find_by_name("PARK COUNTY RE-2")
+    otis = @dr.find_by_name("OTIS R-3")
 
     expected_result_1 = {2011=>0.0,
                        2012=>0.007
@@ -404,9 +438,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_for_race_or_ethnicity_returns_Unknown_Data_Error_if_the_race_isnt_found
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    moffat = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("MOFFAT 2")
-    northglenn = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("NORTHGLENN-THORNTON 12")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    moffat = @dr.find_by_name("MOFFAT 2")
+    northglenn = @dr.find_by_name("NORTHGLENN-THORNTON 12")
 
     assert_raises(UnknownDataError) { academy_20.enrollment.dropout_rate_for_race_or_ethnicity(:alien) }
     assert_raises(UnknownDataError) { moffat.enrollment.dropout_rate_for_race_or_ethnicity(:crustacean) }
@@ -414,9 +449,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_for_race_or_ethnicity_in_year
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    estes = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("PARK (ESTES PARK) R-3")
-    wiggins = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("WIGGINS RE-50(J)")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    estes = @dr.find_by_name("PARK (ESTES PARK) R-3")
+    wiggins = @dr.find_by_name("WIGGINS RE-50(J)")
 
     assert_equal 0.007, academy_20.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:asian, 2012)
     assert_equal 0.045, estes.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:hispanic, 2011)
@@ -424,9 +460,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_for_race_or_ethnicity_in_year_returns_nil_if_the_year_isnt_found
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    lone_star = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("LONE STAR 101")
-    hinsdale = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("HINSDALE COUNTY RE 1")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    lone_star = @dr.find_by_name("LONE STAR 101")
+    hinsdale = @dr.find_by_name("HINSDALE COUNTY RE 1")
 
     assert_equal nil, academy_20.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:asian, 1950)
     assert_equal nil, lone_star.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:white, 1)
@@ -434,9 +471,10 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_dropout_rate_for_race_or_ethnicity_in_year_returns_Unknown_Data_Error_if_the_race_isnt_found
-    academy_20 = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("ACADEMY 20")
-    kiowa = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("KIOWA C-2")
-    lewis_palmer = DistrictRepository.from_csv('/Dropout rates by race and ethnicity.csv').find_by_name("LEWIS-PALMER 38")
+    make_a_dr
+    academy_20 = @dr.find_by_name("ACADEMY 20")
+    kiowa = @dr.find_by_name("KIOWA C-2")
+    lewis_palmer = @dr.find_by_name("LEWIS-PALMER 38")
 
     assert_raises(UnknownDataError) { academy_20.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:reptile, 2012) }
     assert_raises(UnknownDataError) { kiowa.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:amphibian, 2011) }
@@ -444,8 +482,9 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_participation_by_race_or_ethnicity
-    alamosa = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("ALAMOSA RE-11J")
-    colorado = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("COLORADO")
+    make_a_dr
+    alamosa = @dr.find_by_name("ALAMOSA RE-11J")
+    colorado = @dr.find_by_name("COLORADO")
 
     expected_result_1 = {2007=>0.59,
                          2008=>0.594,
@@ -471,7 +510,8 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_participation_by_race_or_ethnicity_in_year
-    aspen = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("ASPEN 1")
+    make_a_dr
+    aspen = @dr.find_by_name("ASPEN 1")
 
     expected_result = {:native_american=>0.0,
                        :asian=>0.02,

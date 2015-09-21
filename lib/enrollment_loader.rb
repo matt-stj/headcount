@@ -1,4 +1,5 @@
 class LoadFromCSVS
+  attr_reader :statewide_testing
   RACES_AND_SEXES = { :all_students => "ALL STUDENTS",
             :asian=>"ASIAN STUDENTS",
             :black=>"BLACK STUDENTS",
@@ -40,8 +41,8 @@ class LoadFromCSVS
     formats.uniq!
   end
 
-  def self.load_pupil_enrollment(path, repo_data)
-    rows = CSV.readlines(path + '/Pupil enrollment.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_pupil_enrollment(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
       repo_data[district_name.upcase] ||= {enrollment: {pupil_enrollment: {}}}
@@ -49,8 +50,8 @@ class LoadFromCSVS
     end
   end
 
-  def self.load_online_pupil_enrollment(path, repo_data)
-    rows = CSV.readlines(path + '/Online pupil enrollment.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_online_pupil_enrollment(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
       repo_data[district_name.upcase] ||= {enrollment: {online_enrollment: {}}}
@@ -58,8 +59,8 @@ class LoadFromCSVS
     end
   end
 
-  def self.load_remediation_in_higher_education(path, repo_data)
-    rows = CSV.readlines(path + '/Remediation in higher education.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_remediation_in_higher_education(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
       repo_data[district_name.upcase] ||= {enrollment: {remediation: {}}}
@@ -67,8 +68,8 @@ class LoadFromCSVS
     end
   end
 
-  def self.load_kindergarteners_in_full_day_program(path, repo_data)
-    rows = CSV.readlines(path + '/Kindergartners in full-day program.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_kindergarteners_in_full_day_program(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
       repo_data[district_name.upcase] ||= {enrollment: {kindergartner_enrollment: {}}}
@@ -76,8 +77,8 @@ class LoadFromCSVS
     end
   end
 
-  def self.load_special_education(path, repo_data)
-    rows = CSV.readlines(path + '/Special education.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_special_education(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
     data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
     repo_data[district_name.upcase] ||= {enrollment: {special_education: {}}}
@@ -85,8 +86,8 @@ class LoadFromCSVS
     end
   end
 
-  def self.load_high_school_graduation_rates(path, repo_data)
-    rows = CSV.readlines(path + '/High school graduation rates.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_high_school_graduation_rates(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
       repo_data[district_name.upcase] ||= {enrollment: {graduation_rate: {}}}
@@ -94,8 +95,8 @@ class LoadFromCSVS
     end
   end
 
-  def self.load_dropout_rates_by_race(path, repo_data)
-    rows = CSV.readlines(path + '/Dropout rates by race and ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_dropout_rates_by_race(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     grouped_rows = rows.group_by { |row|  row.fetch(:location) }
     hash = {}
     location_with_years = grouped_rows.map do |location, rows|
@@ -116,8 +117,8 @@ class LoadFromCSVS
     end
   end
 
-  def self.load_pupil_enrollment_by_race_ethnicity(path, repo_data)
-    rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.load_pupil_enrollment_by_race_ethnicity(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     remove_numbers_from_rows(rows)
     grouped_rows = rows.group_by { |row|  row.fetch(:location) }
     hash = {}
@@ -140,7 +141,7 @@ class LoadFromCSVS
   end
 
   # def self.load_third_grade_students(path, repo_data)
-  #   rows = CSV.readlines(path + '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  #   rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
   #   grouped_rows = rows.group_by { |row| row.fetch(:location)}
   #   hash = {}
   #   location_with_years = grouped_rows.map do |location, rows|
@@ -165,8 +166,8 @@ class LoadFromCSVS
   ####### BEGIN STATEWIDE ----------------------
 
 
-  def self.statewide_testing_load_third_grade_students(path, repo_data)
-    rows = CSV.readlines(path + '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.statewide_testing_load_third_grade_students(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     grouped_rows = rows.group_by { |row| row.fetch(:location)}
     # next unless not bullshit (NA, N/A, LNE, #VALUE!, \r\n)
     hash = {}
@@ -183,13 +184,13 @@ class LoadFromCSVS
           }.to_h
         ]
       }.to_h
-      repo_data[location.upcase] ||= {enrollment: {third_grade_proficiency: {}}}
-      repo_data[location.upcase][:enrollment][:third_grade_proficiency] = hash[location]
+      repo_data[location.upcase] ||= {enrollment: {third_grade_proficiency: {}}, statewide_testing: {}}
+      # repo_data[location.upcase][:statewide_testing][:third_grade_proficiency] = hash[location]
     end
   end
 
-  def self.statewide_testing_load_eight_grade_students(path, repo_data)
-    rows = CSV.readlines(path + '/8th grade students scoring proficient or above on the CSAP_TCAP.csv', headers: true, header_converters: :symbol).map(&:to_h)
+  def self.statewide_testing_load_eight_grade_students(path, repo_data, file)
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     grouped_rows = rows.group_by { |row| row.fetch(:location)}
     hash = {}
     location_with_years = grouped_rows.map do |location, rows|
@@ -210,8 +211,8 @@ class LoadFromCSVS
     end
   end
 
-    def self.statewide_testing_load_math_proficiency_by_race(path, repo_data)
-      rows = CSV.readlines(path + '/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    def self.statewide_testing_load_math_proficiency_by_race(path, repo_data, file)
+      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       grouped_rows = rows.group_by { |row| row.fetch(:location)}
       hash = {}
       location_with_years = grouped_rows.map do |location, rows|
@@ -232,8 +233,8 @@ class LoadFromCSVS
       end
     end
 
-    def self.statewide_testing_load_reading_proficiency_by_race(path, repo_data)
-      rows = CSV.readlines(path + '/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    def self.statewide_testing_load_reading_proficiency_by_race(path, repo_data, file)
+      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       grouped_rows = rows.group_by { |row| row.fetch(:location)}
       hash = {}
       location_with_years = grouped_rows.map do |location, rows|
@@ -254,8 +255,8 @@ class LoadFromCSVS
       end
     end
 
-    def self.statewide_testing_load_writing_proficiency_by_race(path, repo_data)
-      rows = CSV.readlines(path + '/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    def self.statewide_testing_load_writing_proficiency_by_race(path, repo_data, file)
+      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       grouped_rows = rows.group_by { |row| row.fetch(:location)}
       hash = {}
       location_with_years = grouped_rows.map do |location, rows|
@@ -305,8 +306,8 @@ class LoadFromCSVS
 
     # BEGIN ECONOMIC PROFILE -------------
 
-    def self.load_median_household_income(path, repo_data)
-      rows = CSV.readlines(path + '/Median household income.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    def self.load_median_household_income(path, repo_data, file)
+      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       group_by(rows).each do |district_name, rows|
         data = rows.map { |row| [row.fetch(:timeframe), row.fetch(:data).to_i] }.to_h
         #keys are currently strings as ranges like this "2005-2009"
@@ -316,8 +317,8 @@ class LoadFromCSVS
       end
     end
 
-    def self.school_aged_childen_in_poverty(path, repo_data)
-      rows = CSV.readlines(path + '/School-aged children in poverty.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    def self.school_aged_childen_in_poverty(path, repo_data, file)
+      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       remove_numbers_from_rows(rows)
       group_by(rows).each do |district_name, rows|
         data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_s[0..4].to_f] }.to_h
@@ -331,8 +332,8 @@ class LoadFromCSVS
     end
 
     ## need free or reducd lunch
-    def self.load_title_one(path, repo_data)
-      rows = CSV.readlines(path + '/Title I students.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    def self.load_title_one(path, repo_data, file)
+      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       group_by(rows).each do |district_name, rows|
         data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_s[0..4].to_f] }.to_h
 

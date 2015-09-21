@@ -2,7 +2,7 @@ class UnknownDataError < StandardError
 end
 
 class Enrollment
-  attr_reader :annual_enrollment, :enrollment, :data
+  attr_reader :annual_enrollment, :enrollment, :data, :statewide_testing
 
   def initialize(data)
     @data = data
