@@ -27,6 +27,12 @@ class EnrollmentLoader
     File.expand_path '../data', __dir__
   end
 
+  def self.remove_numbers_from_rows(rows)
+    rows.delete_if do |row|
+      row[:dataformat] == 'Number'
+    end
+  end
+
   def self.group_by(rows)
     rows.group_by { |row| row.fetch(:location) }
   end
@@ -114,6 +120,7 @@ class EnrollmentLoader
 
   def self.load_pupil_enrollment_by_race_ethnicity(path, repo_data)
     rows = CSV.readlines(path + '/Pupil enrollment by race_ethnicity.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    remove_numbers_from_rows(rows)
     grouped_rows = rows.group_by { |row|  row.fetch(:location) }
     hash = {}
     location_with_years = grouped_rows.map do |location, rows|
@@ -136,9 +143,11 @@ class EnrollmentLoader
 
   ####### Begin STATEWIDE ----------------------
 
+
   def self.statewide_testing_load_third_grade_students(path, repo_data)
     rows = CSV.readlines(path + '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv', headers: true, header_converters: :symbol).map(&:to_h)
     grouped_rows = rows.group_by { |row| row.fetch(:location)}
+    # next unless not bullshit (NA, N/A, LNE, #VALUE!, \r\n)
     hash = {}
     location_with_years = grouped_rows.map do |location, rows|
       hash[location] = rows.group_by {|row|
@@ -288,6 +297,7 @@ class EnrollmentLoader
 
     def self.school_aged_childen_in_poverty(path, repo_data)
       rows = CSV.readlines(path + '/School-aged children in poverty.csv', headers: true, header_converters: :symbol).map(&:to_h)
+      remove_numbers_from_rows(rows)
       group_by(rows).each do |district_name, rows|
         data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_s[0..4].to_f] }.to_h
 
