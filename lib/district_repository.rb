@@ -31,6 +31,17 @@ class DistrictRepository < LoadFromCSVS
     load_dropout_rates_by_race(path, repo_data)
     load_pupil_enrollment_by_race_ethnicity(path, repo_data)
     # load_third_grade_students(path, repo_data)
+    ###statewide###
+    statewide_testing_load_third_grade_students(path, repo_data)
+    statewide_testing_load_eight_grade_students(path, repo_data)
+    statewide_testing_load_math_proficiency_by_race(path, repo_data)
+    statewide_testing_load_reading_proficiency_by_race(path, repo_data)
+    statewide_testing_load_writing_proficiency_by_race(path, repo_data)
+    ###economic#####
+    load_median_household_income(path, repo_data)
+    school_aged_childen_in_poverty(path, repo_data)
+    load_title_one(path, repo_data)
+    # statewide_testing_load_writing_proficiency_by_race_for_all(path, repo_data) SHOULD HAPPEN IN METHOD - NOT BE RELOADED
     repo = DistrictRepository.new(repo_data)
     repo
   end

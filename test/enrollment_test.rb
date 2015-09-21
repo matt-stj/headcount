@@ -15,6 +15,62 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected_result, district.enrollment.graduation_rate_by_year
   end
 
+  def test_proficient_by_grade_third_grade
+    dr = DistrictRepository.from_csv("THIS NEEDS TO BE SOMETHING?")
+    academy_20 = dr.find_by_name("ACADEMY 20")
+
+    expected_result =  { 2008=>{:math=>0.857, :reading=>0.866, :writing=>0.671},
+                         2009=>{:math=>0.824, :reading=>0.862, :writing=>0.706},
+                         2010=>{:math=>0.849, :reading=>0.864, :writing=>0.662},
+                         2011=>{:math=>0.819, :reading=>0.867, :writing=>0.678},
+                         2012=>{:reading=>0.87, :math=>0.83, :writing=>0.655},
+                         2013=>{:math=>0.855, :reading=>0.859, :writing=>0.668},
+                         2014=>{:math=>0.834, :reading=>0.831, :writing=>0.639}}
+
+    #should be district.statewide.proficient_by_grade(grade)
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_by_grade(10) }
+    assert_equal expected_result, academy_20.enrollment.proficient_by_grade(3)
+  end
+
+  def test_proficient_by_grade_eigth_grade
+    dr = DistrictRepository.from_csv("THIS SHOULD PROBABLY BE SOMETHING TOO")
+    academy_20 = dr.find_by_name("ACADEMY 20")
+    expected_result =  { 2008=>{:math=>0.64, :reading=>0.843, :writing=>0.734},
+                         2009=>{:math=>0.656, :reading=>0.825, :writing=>0.701},
+                         2010=>{:math=>0.672, :reading=>0.863, :writing=>0.754},
+                         2011=>{:reading=>0.832, :math=>0.653, :writing=>0.745},
+                         2012=>{:math=>0.681, :writing=>0.738, :reading=>0.833},
+                         2013=>{:math=>0.661, :reading=>0.852, :writing=>0.75},
+                         2014=>{:math=>0.684, :reading=>0.827, :writing=>0.747}}
+
+    #should be district.statewide.proficient_by_grade(grade)
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_by_grade(10) }
+    assert_equal expected_result, academy_20.enrollment.proficient_by_grade(8)
+  end
+
+  def test_proficient_for_subject_in_year
+    dr = DistrictRepository.from_csv("THIS SHOULD PROBABLY BE SOMETHING TOO")
+    academy_20 = dr.find_by_name("ACADEMY 20")
+
+    assert_equal 0.680, academy_20.enrollment.proficient_for_subject_in_year(:math, 2011)
+    assert_equal 0.845, academy_20.enrollment.proficient_for_subject_in_year(:reading, 2012)
+    assert_equal 0.720, academy_20.enrollment.proficient_for_subject_in_year(:writing, 2013)
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_in_year(:cooking, 2013) }
+    #NEED TO RAISE ERROR FOR ALL OTHER POTENTIAL ERROR CASES (YEAR)
+  end
+
+  def test_proficient_for_subject_by_grade_eigth_grade
+    dr = DistrictRepository.from_csv("THIS SHOULD PROBABLY BE SOMETHING TOO")
+    academy_20 = dr.find_by_name("ACADEMY 20")
+    #should be district.statewide.method_name
+    assert_equal 0.681, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:math, 8, 2012)
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 8, 2012) }
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 14, 2012) }
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 8, 1234) }
+    assert_equal 0.747, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:writing, 8, 2014)
+    assert_equal 0.832, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
+  end
+
   def test_participation_in_year
     colorado = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("COLORADO")
     academy_20 = DistrictRepository.from_csv('/Pupil enrollment.csv').find_by_name("ACADEMY 20")
@@ -420,8 +476,36 @@ class EnrollmentTest < Minitest::Test
                        :white=>0.85,
                        :pacific_islander=>0.0,
                        :two_or_more=>0.0}
+    expected_result = {:native_american=>0.0,:asian=>0.02,:black=>0.01,:hispanic=>0.12,:white=>0.85,:pacific_islander=>0.0,:two_or_more=>0.0}
 
     assert_equal expected_result, aspen.enrollment.participation_by_race_or_ethnicity_in_year(2007)
   end
 
+  def test_participation_by_race_or_ethnicity
+    skip
+    dr = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv')
+    district = dr.find_by_name("Colorado")
+
+    expected_result =  {2007 => 0.034,
+                        2008 => 0.036,
+                        2009 => 0.037,
+                        2010 => 0.030,
+                        2011 => 0.031,
+                        2012 => 0.032,
+                        2013 => 0.030,
+                        2014 => 0.030}
+
+
+    assert_equal expected_result, district.enrollment.participation_by_race_or_ethnicity(:asian)
+  end
+  #
+  # def test_it_omits_excel_missing_data
+  #   woodlin = repo.find_by_name ('WOODLIN R-104')
+  #   expected = {} #we want to return an empty hash
+  #   assert_equal expected, woodlin.statewide_testing.proficient_by_grade(3) #VALUE!
+  #
+  #   east_yuma = repo.find_by_name ('EAST YUMA COUNTY RJ-2')
+  #   expected = {}
+  #   assert_equal expected, woodlin.statewide_testing.proficient_by_grade(3) #VALUE!
+  # end
 end
