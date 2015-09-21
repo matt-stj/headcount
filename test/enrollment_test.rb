@@ -6,6 +6,7 @@ class EnrollmentTest < Minitest::Test
   def test_proficient_by_grade_third_grade
     dr = DistrictRepository.from_csv("THIS NEEDS TO BE SOMETHING?")
     academy_20 = dr.find_by_name("ACADEMY 20")
+
     expected_result =  { 2008=>{:math=>0.857, :reading=>0.866, :writing=>0.671},
                          2009=>{:math=>0.824, :reading=>0.862, :writing=>0.706},
                          2010=>{:math=>0.849, :reading=>0.864, :writing=>0.662},
@@ -43,7 +44,19 @@ class EnrollmentTest < Minitest::Test
     assert_equal 0.845, academy_20.enrollment.proficient_for_subject_in_year(:reading, 2012)
     assert_equal 0.720, academy_20.enrollment.proficient_for_subject_in_year(:writing, 2013)
     assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_in_year(:cooking, 2013) }
-    #what's the spec say for inputting a year that doesn't exist?
+    #NEED TO RAISE ERROR FOR ALL OTHER POTENTIAL ERROR CASES (YEAR)
+  end
+
+  def test_proficient_for_subject_by_grade_eigth_grade
+    dr = DistrictRepository.from_csv("THIS SHOULD PROBABLY BE SOMETHING TOO")
+    academy_20 = dr.find_by_name("ACADEMY 20")
+    #should be district.statewide.method_name
+    assert_equal 0.681, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:math, 8, 2012)
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 8, 2012) }
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 14, 2012) }
+    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 8, 1234) }
+    assert_equal 0.747, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:writing, 8, 2014)
+    assert_equal 0.832, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
   end
 
   def test_participation_in_year
@@ -236,7 +249,6 @@ class EnrollmentTest < Minitest::Test
 
   def test_participation_by_race_or_ethnicity_in_year
     aspen = DistrictRepository.from_csv('/Pupil enrollment by race_ethnicity.csv').find_by_name("ASPEN 1")
-
     expected_result = {:native_american=>0.0,:asian=>0.02,:black=>0.01,:hispanic=>0.12,:white=>0.85,:pacific_islander=>0.0,:two_or_more=>0.0}
 
     assert_equal expected_result, aspen.enrollment.participation_by_race_or_ethnicity_in_year(2007)
