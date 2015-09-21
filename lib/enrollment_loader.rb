@@ -41,12 +41,42 @@ class LoadFromCSVS
     formats.uniq!
   end
 
+  def self.district_for(name, repo_data)
+    repo_data[name.upcase] ||= {
+      enrollment: {
+        pupil_enrollment:               {},
+        online_enrollment:              {},
+        remediation:                    {},
+        kindergartner_enrollment:       {},
+        special_education:              {},
+        graduation_rate:                {},
+        dropout_rate_by_race:           {},
+        enrollment_by_race:             {},
+      },
+
+      statewide_testing: {
+        third_grade_proficiency:        {},
+        eigth_grade_proficiency:        {},
+        math_proficiency_by_race:       {},
+        reading_proficiency_by_race:    {},
+        writing_proficiency_by_race:    {},
+      },
+
+      economic_data: {
+        median_household_income:        {},
+        school_aged_childen_in_poverty: {},
+        title_one:                      {},
+      }
+    }
+
+  end
+
   def self.load_pupil_enrollment(path, repo_data, file)
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
-      repo_data[district_name.upcase] ||= {enrollment: {pupil_enrollment: {}}}
-      repo_data[district_name.upcase][:enrollment][:pupil_enrollment] = data
+      district = district_for(district_name, repo_data)
+      district[:enrollment][:pupil_enrollment] = data
     end
   end
 
@@ -54,8 +84,8 @@ class LoadFromCSVS
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
-      repo_data[district_name.upcase] ||= {enrollment: {online_enrollment: {}}}
-      repo_data[district_name.upcase][:enrollment][:online_enrollment] = data
+      district = district_for(district_name, repo_data)
+      district[:enrollment][:online_enrollment] = data
     end
   end
 
@@ -63,16 +93,18 @@ class LoadFromCSVS
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
-      repo_data[district_name.upcase] ||= {enrollment: {remediation: {}}}
+      district = district_for(district_name, repo_data)
       repo_data[district_name.upcase][:enrollment][:remediation] = data
     end
   end
+
+  #why does [0..4] work without going to a string
 
   def self.load_kindergarteners_in_full_day_program(path, repo_data, file)
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
-      repo_data[district_name.upcase] ||= {enrollment: {kindergartner_enrollment: {}}}
+      district = district_for(district_name, repo_data)
       repo_data[district_name.upcase][:enrollment][:kindergartner_enrollment] = data
     end
   end
@@ -81,7 +113,7 @@ class LoadFromCSVS
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
     data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
-    repo_data[district_name.upcase] ||= {enrollment: {special_education: {}}}
+    district = district_for(district_name, repo_data)
     repo_data[district_name.upcase][:enrollment][:special_education] = data
     end
   end
@@ -90,7 +122,7 @@ class LoadFromCSVS
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data)[0..4].to_f] }.to_h
-      repo_data[district_name.upcase] ||= {enrollment: {graduation_rate: {}}}
+      district = district_for(district_name, repo_data)
       repo_data[district_name.upcase][:enrollment][:graduation_rate] = data
     end
   end
@@ -112,7 +144,7 @@ class LoadFromCSVS
           }.to_h
         ]
       }.to_h
-      repo_data[location.upcase] ||= {enrollment: {dropout_rate_by_race: {}}}
+      district = district_for(location, repo_data)
       repo_data[location.upcase][:enrollment][:dropout_rate_by_race] = hash[location]
     end
   end
@@ -135,7 +167,7 @@ class LoadFromCSVS
           }.to_h
         ]
       }.to_h
-      repo_data[location.upcase] ||= {enrollment: {enrollment_by_race: {}}}
+      district = district_for(location, repo_data)
       repo_data[location.upcase][:enrollment][:enrollment_by_race] = hash[location]
     end
   end
@@ -184,8 +216,8 @@ class LoadFromCSVS
           }.to_h
         ]
       }.to_h
-      repo_data[location.upcase] ||= {enrollment: {third_grade_proficiency: {}}, statewide_testing: {}}
-      # repo_data[location.upcase][:statewide_testing][:third_grade_proficiency] = hash[location]
+      district = district_for(location, repo_data)
+      repo_data[location.upcase][:statewide_testing][:third_grade_proficiency] = hash[location]
     end
   end
 
@@ -206,8 +238,8 @@ class LoadFromCSVS
           }.to_h
         ]
       }.to_h
-      repo_data[location.upcase] ||= {enrollment: {eigth_grade_proficiency: {}}}
-      repo_data[location.upcase][:enrollment][:eigth_grade_proficiency] = hash[location]
+      district = district_for(location, repo_data)
+      repo_data[location.upcase][:statewide_testing][:eigth_grade_proficiency] = hash[location]
     end
   end
 
@@ -228,8 +260,8 @@ class LoadFromCSVS
             }.to_h
           ]
         }.to_h
-        repo_data[location.upcase] ||= {enrollment: {math_proficiency_by_race: {}}}
-        repo_data[location.upcase][:enrollment][:math_proficiency_by_race] = hash[location]
+        district = district_for(location, repo_data)
+        repo_data[location.upcase][:statewide_testing][:math_proficiency_by_race] = hash[location]
       end
     end
 
@@ -250,8 +282,8 @@ class LoadFromCSVS
             }.to_h
           ]
         }.to_h
-        repo_data[location.upcase] ||= {enrollment: {reading_proficiency_by_race: {}}}
-        repo_data[location.upcase][:enrollment][:reading_proficiency_by_race] = hash[location]
+        district = district_for(location, repo_data)
+        repo_data[location.upcase][:statewide_testing][:reading_proficiency_by_race] = hash[location]
       end
     end
 
@@ -272,8 +304,8 @@ class LoadFromCSVS
             }.to_h
           ]
         }.to_h
-        repo_data[location.upcase] ||= {enrollment: {writing_proficiency_by_race: {}}}
-        repo_data[location.upcase][:enrollment][:writing_proficiency_by_race] = hash[location]
+        district = district_for(location, repo_data)
+        repo_data[location.upcase][:statewide_testing][:writing_proficiency_by_race] = hash[location]
       end
     end
 
@@ -312,8 +344,8 @@ class LoadFromCSVS
         data = rows.map { |row| [row.fetch(:timeframe), row.fetch(:data).to_i] }.to_h
         #keys are currently strings as ranges like this "2005-2009"
 
-        repo_data[district_name.upcase] ||= {enrollment: {median_household_income: {}}}
-        repo_data[district_name.upcase][:enrollment][:median_household_income] = data
+        district = district_for(district_name, repo_data)
+        repo_data[district_name.upcase][:economic_data][:median_household_income] = data
       end
     end
 
@@ -325,9 +357,8 @@ class LoadFromCSVS
 
 
         #needs to work for numbers and percents
-
-        repo_data[district_name.upcase] ||= {enrollment: {school_aged_childen_in_poverty: {}}}
-        repo_data[district_name.upcase][:enrollment][:school_aged_childen_in_poverty] = data
+        district = district_for(district_name, repo_data)
+        repo_data[district_name.upcase][:economic_data][:school_aged_childen_in_poverty] = data
       end
     end
 
@@ -337,8 +368,8 @@ class LoadFromCSVS
       group_by(rows).each do |district_name, rows|
         data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_s[0..4].to_f] }.to_h
 
-        repo_data[district_name.upcase] ||= {enrollment: {title_one: {}}}
-        repo_data[district_name.upcase][:enrollment][:title_one] = data
+        district = district_for(district_name, repo_data)
+        repo_data[district_name.upcase][:economic_data][:title_one] = data
       end
     end
 

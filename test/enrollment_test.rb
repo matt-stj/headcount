@@ -39,8 +39,8 @@ class EnrollmentTest < Minitest::Test
                          2014=>{:math=>0.834, :reading=>0.831, :writing=>0.639}}
 
     #should be district.statewide.proficient_by_grade(grade)
-    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_by_grade(10) }
-    assert_equal expected_result, academy_20.enrollment.proficient_by_grade(3)
+    assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_by_grade(10) }
+    assert_equal expected_result, academy_20.statewide_testing.proficient_by_grade(3)
   end
 
   def test_proficient_by_grade_eigth_grade
@@ -55,8 +55,8 @@ class EnrollmentTest < Minitest::Test
                          2014=>{:math=>0.684, :reading=>0.827, :writing=>0.747}}
 
     #should be district.statewide.proficient_by_grade(grade)
-    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_by_grade(10) }
-    assert_equal expected_result, academy_20.enrollment.proficient_by_grade(8)
+    assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_by_grade(10) }
+    assert_equal expected_result, academy_20.statewide_testing.proficient_by_grade(8)
   end
 
   def test_proficient_for_subject_in_year
@@ -64,10 +64,10 @@ class EnrollmentTest < Minitest::Test
     dr = @dr
     academy_20 = dr.find_by_name("ACADEMY 20")
 
-    assert_equal 0.680, academy_20.enrollment.proficient_for_subject_in_year(:math, 2011)
-    assert_equal 0.845, academy_20.enrollment.proficient_for_subject_in_year(:reading, 2012)
-    assert_equal 0.720, academy_20.enrollment.proficient_for_subject_in_year(:writing, 2013)
-    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_in_year(:cooking, 2013) }
+    assert_equal 0.680, academy_20.statewide_testing.proficient_for_subject_in_year(:math, 2011)
+    assert_equal 0.845, academy_20.statewide_testing.proficient_for_subject_in_year(:reading, 2012)
+    assert_equal 0.720, academy_20.statewide_testing.proficient_for_subject_in_year(:writing, 2013)
+    assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_for_subject_in_year(:cooking, 2013) }
     #NEED TO RAISE ERROR FOR ALL OTHER POTENTIAL ERROR CASES (YEAR)
   end
 
@@ -76,12 +76,12 @@ class EnrollmentTest < Minitest::Test
     dr = @dr
     academy_20 = dr.find_by_name("ACADEMY 20")
     #should be district.statewide.method_name
-    assert_equal 0.681, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:math, 8, 2012)
-    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 8, 2012) }
-    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 14, 2012) }
-    assert_raises(UnknownDataError) { academy_20.enrollment.proficient_for_subject_by_grade_in_year(:science, 8, 1234) }
-    assert_equal 0.747, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:writing, 8, 2014)
-    assert_equal 0.832, academy_20.enrollment.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
+    assert_equal 0.681, academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 8, 2012)
+    assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:science, 8, 2012) }
+    assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:science, 14, 2012) }
+    assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:science, 8, 1234) }
+    assert_equal 0.747, academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:writing, 8, 2014)
+    assert_equal 0.832, academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
   end
 
   ##End of statwide -- beginning of Enrollment##
@@ -512,7 +512,6 @@ class EnrollmentTest < Minitest::Test
   def test_participation_by_race_or_ethnicity_in_year
     make_a_dr
     aspen = @dr.find_by_name("ASPEN 1")
-
     expected_result = {:native_american=>0.0,
                        :asian=>0.02,
                        :black=>0.01,
