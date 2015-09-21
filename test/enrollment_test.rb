@@ -22,7 +22,7 @@ class EnrollmentTest < Minitest::Test
     assert_equal 832368, colorado.enrollment.participation_in_year(2009)
     assert_equal 854265, colorado.enrollment.participation_in_year(2011)
     assert_equal 889006, colorado.enrollment.participation_in_year(2014)
-
+    binding.pry
     assert_equal 23973, academy_20.enrollment.participation_in_year(2012)
     assert_equal 24578, academy_20.enrollment.participation_in_year(2014)
     assert_equal 22620, academy_20.enrollment.participation_in_year(2009)
