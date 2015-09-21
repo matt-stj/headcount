@@ -30,6 +30,11 @@ class DistrictRepository < EnrollmentLoader
     load_high_school_graduation_rates(path, repo_data)
     load_dropout_rates_by_race(path, repo_data)
     load_pupil_enrollment_by_race_ethnicity(path, repo_data)
+    statewide_testing_load_third_grade_students(path, repo_data)
+    statewide_testing_load_eight_grade_students(path, repo_data)
+    statewide_testing_load_math_proficiency_by_race(path, repo_data)
+    statewide_testing_load_reading_proficiency_by_race(path, repo_data)
+    statewide_testing_load_writing_proficiency_by_race(path, repo_data)
     repo = DistrictRepository.new(repo_data)
     repo
   end

@@ -134,5 +134,119 @@ class EnrollmentLoader
     end
   end
 
+  #######THIS NEEDS TO GO TO STATEWIDE ############
+
+  def self.statewide_testing_load_third_grade_students(path, repo_data)
+    rows = CSV.readlines(path + '/3rd grade students scoring proficient or above on the CSAP_TCAP.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    grouped_rows = rows.group_by { |row| row.fetch(:location)}
+    hash = {}
+    location_with_years = grouped_rows.map do |location, rows|
+      hash[location] = rows.group_by {|row|
+        row.fetch(:timeframe).to_i
+      }
+      .map {|year, rows|
+        [year,
+          rows.map {|row|
+            [ row.fetch(:score).downcase.to_sym,
+              row.fetch(:data).to_s[0..4].to_f
+            ]
+          }.to_h
+        ]
+      }.to_h
+      repo_data[location.upcase] ||= {enrollment: {third_grade_proficiency: {}}}
+      repo_data[location.upcase][:enrollment][:third_grade_proficiency] = hash[location]
+    end
+  end
+
+  def self.statewide_testing_load_eight_grade_students(path, repo_data)
+    rows = CSV.readlines(path + '/8th grade students scoring proficient or above on the CSAP_TCAP.csv', headers: true, header_converters: :symbol).map(&:to_h)
+    grouped_rows = rows.group_by { |row| row.fetch(:location)}
+    hash = {}
+    location_with_years = grouped_rows.map do |location, rows|
+      hash[location] = rows.group_by {|row|
+        row.fetch(:timeframe).to_i
+      }
+      .map {|year, rows|
+        [year,
+          rows.map {|row|
+            [ row.fetch(:score).downcase.to_sym,
+              row.fetch(:data).to_s[0..4].to_f
+            ]
+          }.to_h
+        ]
+      }.to_h
+      repo_data[location.upcase] ||= {enrollment: {eigth_grade_proficiency: {}}}
+      repo_data[location.upcase][:enrollment][:eigth_grade_proficiency] = hash[location]
+    end
+  end
+
+    def self.statewide_testing_load_math_proficiency_by_race(path, repo_data)
+      rows = CSV.readlines(path + '/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv', headers: true, header_converters: :symbol).map(&:to_h)
+      grouped_rows = rows.group_by { |row| row.fetch(:location)}
+      hash = {}
+      location_with_years = grouped_rows.map do |location, rows|
+        hash[location] = rows.group_by {|row|
+          row.fetch(:timeframe).to_i
+        }
+        .map {|year, rows|
+          [year,
+            rows.map {|row|
+              [ row.fetch(:race_ethnicity).downcase.to_sym,
+                row.fetch(:data).to_s[0..4].to_f
+              ]
+            }.to_h
+          ]
+        }.to_h
+        repo_data[location.upcase] ||= {enrollment: {math_proficiency_by_race: {}}}
+        repo_data[location.upcase][:enrollment][:math_proficiency_by_race] = hash[location]
+      end
+    end
+
+    def self.statewide_testing_load_reading_proficiency_by_race(path, repo_data)
+      rows = CSV.readlines(path + '/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv', headers: true, header_converters: :symbol).map(&:to_h)
+      grouped_rows = rows.group_by { |row| row.fetch(:location)}
+      hash = {}
+      location_with_years = grouped_rows.map do |location, rows|
+        hash[location] = rows.group_by {|row|
+          row.fetch(:timeframe).to_i
+        }
+        .map {|year, rows|
+          [year,
+            rows.map {|row|
+              [ row.fetch(:race_ethnicity).downcase.to_sym,
+                row.fetch(:data).to_s[0..4].to_f
+              ]
+            }.to_h
+          ]
+        }.to_h
+        repo_data[location.upcase] ||= {enrollment: {reading_proficiency_by_race: {}}}
+        repo_data[location.upcase][:enrollment][:reading_proficiency_by_race] = hash[location]
+      end
+    end
+
+    def self.statewide_testing_load_writing_proficiency_by_race(path, repo_data)
+      rows = CSV.readlines(path + '/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv', headers: true, header_converters: :symbol).map(&:to_h)
+      grouped_rows = rows.group_by { |row| row.fetch(:location)}
+      hash = {}
+      location_with_years = grouped_rows.map do |location, rows|
+        hash[location] = rows.group_by {|row|
+          row.fetch(:timeframe).to_i
+        }
+        .map {|year, rows|
+          [year,
+            rows.map {|row|
+              [ row.fetch(:race_ethnicity).downcase.to_sym,
+                row.fetch(:data).to_s[0..4].to_f
+              ]
+            }.to_h
+          ]
+        }.to_h
+        repo_data[location.upcase] ||= {enrollment: {writing_proficiency_by_race: {}}}
+        repo_data[location.upcase][:enrollment][:writing_proficiency_by_race] = hash[location]
+      end
+    end
+
+
+
 
 end

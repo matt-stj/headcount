@@ -148,4 +148,30 @@ class Enrollment
     @data.fetch(:enrollment_by_race).fetch(year)
   end
 
+
+
+  def proficient_by_grade(grade)
+    if grade == 3
+      @data.fetch(:third_grade_proficiency)
+    elsif grade == 8
+      @data.fetch(:eigth_grade_proficiency)
+    else
+      raise UnknownDataError
+    end
+  end
+
+  def proficient_for_subject_in_year(subject, year)
+    if subject == :math
+      @data.fetch(:math_proficiency_by_race).fetch(year).fetch(:"all students")
+    elsif subject == :reading
+      @data.fetch(:reading_proficiency_by_race).fetch(year).fetch(:"all students")
+    elsif subject == :writing
+      @data.fetch(:writing_proficiency_by_race).fetch(year).fetch(:"all students")
+    else
+      raise UnknownDataError
+    end
+  end
+
+  def 
+
 end
