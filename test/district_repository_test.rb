@@ -25,7 +25,7 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 863561, district.enrollment.in_year(2012)
   end
 
-  def test_the_district_repo_is_full
+  def test_the_district_repo_is_complete_with_all_181_districts
     dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
     districts = dr.districts
 
