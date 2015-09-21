@@ -147,5 +147,4 @@ class Enrollment
   def participation_by_race_or_ethnicity_in_year(year)
     @data.fetch(:enrollment_by_race).fetch(year)
   end
-
 end
