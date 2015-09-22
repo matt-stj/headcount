@@ -1,8 +1,11 @@
 class UnknownDataError < StandardError
 end
 
-
 class StatewideTesting
+  POSSIBLE_RACES = [:asian, :black, :pacific_islander, :hispanic, :native_american, :two_or_more, :white]
+  POSSIBLE_SUBJECTS = [:reading, :writing, :math]
+  POSSIBLE_YEARS = [2011, 2012, 2013, 2014]
+
   attr_reader :statewide_testing
 
   def initialize(data)
@@ -35,11 +38,17 @@ class StatewideTesting
 
   def proficient_for_subject_in_year(subject, year)
     if subject == :math
-      @data.fetch(:math_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
+      math_data = @data.fetch(:math_proficiency_by_race)
+      if math_data.has_key?(year)
+        math_data.fetch(year).fetch(:all)
+      else
+        raise UnknownDataError
+      end
+      #Need to refactor for this to be shorter and for the bottom two cases to raise the same error as above.
     elsif subject == :reading
-      @data.fetch(:reading_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
+      @data.fetch(:reading_proficiency_by_race).fetch(year, UnknownDataError).fetch(:all)
     elsif subject == :writing
-      @data.fetch(:writing_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
+      @data.fetch(:writing_proficiency_by_race).fetch(year, UnknownDataError).fetch(:all)
     else
       raise UnknownDataError
     end
@@ -90,6 +99,22 @@ class StatewideTesting
     almost_there = writing.zip(close_hash.values)
     almost_there
     here = almost_there.last.flatten
+    array = []
+    here.each do |x|
+      if x.class == Hash
+        array << x
+      end
+    end
+    new_hash = {}
+    new_hash[here.first] = array
+
+    race_hash = {}
+    go = almost_there.map do |x|
+      race_hash[x.first.first] = x[1], x[2]
+    end
+
+
+
     # hi = Hash[here.first, [here[1], here[2], here[3]]]
     # {2011=>0.816, 2012=>0.818, 2013=>0.805, 2014=>0.8}
     # {2011=>0.897, 2012=>0.893, 2013=>0.901, 2014=>0.855}
@@ -136,15 +161,18 @@ class StatewideTesting
 
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-    proficiencies = {
-      math: :math_proficiency_by_race,
-      reading: :reading_proficiency_by_race,
-      writing: :writing_proficiency_by_race
-    }
-
-    proficiency = proficiencies.fetch(subject)
-
-    @data.fetch(proficiency).fetch(year).fetch(race)
+   if POSSIBLE_RACES.include?(race) && POSSIBLE_SUBJECTS.include?(subject) && POSSIBLE_YEARS.include?(year)
+      proficiencies = {
+        math: :math_proficiency_by_race,
+        reading: :reading_proficiency_by_race,
+        writing: :writing_proficiency_by_race
+      }
+      proficiency = proficiencies.fetch(subject)
+      @data.fetch(proficiency).fetch(year).fetch(race)
+    else
+      raise UnknownDataError
+    end
+    # binding.pry
   end
 
   def statewide_combining_proficienty_by_race_and_subject(race)
