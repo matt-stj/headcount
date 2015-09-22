@@ -20,5 +20,11 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal -0.123, @ha.kindergarten_participation_rate_variation("ACADEMY 20")
   end
 
+  def test_top_statewide_testing_year_over_year_growth
+    make_a_ha
+
+    assert_equal 0.123, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:math)
+  end
+
 
 end

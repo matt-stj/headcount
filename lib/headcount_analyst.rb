@@ -15,7 +15,20 @@ class HeadcountAnalyst
     @repo.districts
   end
 
-  def top_statewide_testing_year_over_year_growth(subject)
+  def top_statewide_testing_year_over_year_growth_in_3rd_grade(subject)
+    district_data = districts.fetch("COLORADO").statewide_testing
+    data_by_subject = district_data.data.fetch(:third_grade_proficiency).map { |year, proficiencies|
+                      year = year, proficiencies = proficiencies.fetch(subject)
+                        }.to_h
+    min_max ||= data_by_subject.minmax_by { |year, proficiency|
+                year
+              }
+    growth = (min_max[0][1] - min_max[1][1])
+    #.to_s[0..4].to_f
+    binding.pry
+  end
+
+  def top_statewide_testing_year_over_year_growth_in_8th_grade(subject)
 
   end
 
