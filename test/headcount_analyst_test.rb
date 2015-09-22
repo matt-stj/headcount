@@ -24,10 +24,10 @@ class HeadcountAnalystTest < Minitest::Test
     # assert_equal 0, @ha.kindergarten_participation_rate_variation("ACADEMY 20", "hi there")
   end
 
-  def test_kindergarten_participation_rate_variation_against_state
+  def test_kindergarten_participation_against_household_income
     make_a_ha
 
-    @ha.kindergarten_participation_against_household_income("ACADEMY 20")
+    assert_equal -0.080, @ha.kindergarten_participation_against_household_income("ACADEMY 20")
 
     #assert something when fetched district is nil
     # assert_equal 0, @ha.kindergarten_participation_rate_variation("ACADEMY 20", "hi there")
