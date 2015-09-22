@@ -1,7 +1,7 @@
 require_relative '../lib/district_repository'
 
 class HeadcountAnalyst
-  attr_reader :repo, :districts, :economic_profile, :statewide_testing
+  attr_reader :repo, :districts, :economic_profile, :statewide_testing, :data
 
   def path
     File.expand_path '../data', __dir__
@@ -19,42 +19,45 @@ class HeadcountAnalyst
 
   end
 
-  def kindergarten_participation_rate_variation(district)
-    state = districts.fetch("COLORADO")
-    state_data = state.enrollment.kindergarten_participation_by_year
-    district = districts.fetch(district)
-    district_data = district.enrollment.kindergarten_participation_by_year
-    state_average = (state_data.values.inject(0, :+))/(state_data.values.size)
-    district_average = (district_data.values.inject(0, :+))/(district_data.values.size)
-    difference = district_average - state_average
-
-    if difference < 0
-      difference = difference.to_s[0..5].to_f
-    else
-      difference = differnce.to_s[0..4].to_f
-    end
-
-    #compares the input distric's kindergarten participation to the state
-    #returns percent difference compared to state average
+  def kindergarten_participation_rate_variation(district_1, district_2)
+    district_2 = ("COLORADO") if district_2 == 'state'
+    district_1_average = average_kindergarten_participation(district_1)
+    district_2_average = average_kindergarten_participation(district_2)
+    difference = district_1_average - district_2_average
+    truncate(difference)
   end
 
-  def kindergarten_participation_rate_variation(district_1, district_2)
-    state = districts.fetch("COLORADO")
-    state_data = state.enrollment.kindergarten_participation_by_year
-    district = districts.fetch(district)
-    district_data = district.enrollment.kindergarten_participation_by_year
-    state_average = (state_data.values.inject(0, :+))/(state_data.values.size)
+  #refactor into kindergarten_method_above
+
+  def kindergarten_participation_against_household_income(district)
+    district_average_income = average_income_by_district(district)
+    state_average_income = average_income_by_district("COLORADO")
+
+    variation_from_state = (district_average_income.to_f/state_average_income.to_f)
+    kindergarten_participation = kindergarten_participation_rate_variation(district, 'state')
+    variation = (kindergarten_participation/variation_from_state)
+
+    truncate(variation)
+  end
+
+  private
+
+  def average_kindergarten_participation(district)
+    district_data = districts.fetch(district).enrollment.kindergarten_participation_by_year
     district_average = (district_data.values.inject(0, :+))/(district_data.values.size)
-    difference = district_average - state_average
+  end
 
-    if difference < 0
-      difference = difference.to_s[0..5].to_f
+  def average_income_by_district(district)
+    district_income_data = districts.fetch(district).economic_profile.data.fetch(:median_household_income)
+    district_average_income = (district_income_data.values.inject(0, :+))/(district_income_data.values.size)
+  end
+
+  def truncate(value)
+    if value < 0
+      value = value.to_s[0..5].to_f
     else
-      difference = differnce.to_s[0..4].to_f
+      value = value.to_s[0..4].to_f
     end
-
-    #compares the input distric's kindergarten participation to the state
-    #returns percent difference compared to state average
   end
 
 end
