@@ -102,7 +102,6 @@ class StatewideTestingTest < Minitest::Test
     assert_equal expected_1, woodlin.proficient_by_grade(3)
     assert_equal expected_2, east_yuma.proficient_by_grade(3)
     assert_equal expected_3, west_yuma.proficient_by_grade(3)
-    binding.pry
   end
 
 end

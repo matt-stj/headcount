@@ -41,12 +41,13 @@ class StatewideTesting
         raise UnknownDataError
       end
       #Need to refactor for this to be shorter and for the bottom two cases to raise the same error as above.
-    elsif subject == :reading
-      @data.fetch(:reading_proficiency_by_race).fetch(year, UnknownDataError).fetch(:"all students")
-    elsif subject == :writing
-      @data.fetch(:writing_proficiency_by_race).fetch(year, UnknownDataError).fetch(:"all students")
-    else
-      raise UnknownDataError
+      if subject == :reading
+        @data.fetch(:reading_proficiency_by_race).fetch(year, UnknownDataError).fetch(:"all students")
+      elsif subject == :writing
+        @data.fetch(:writing_proficiency_by_race).fetch(year, UnknownDataError).fetch(:"all students")
+      else
+        raise UnknownDataError
+      end
     end
   end
 
@@ -95,6 +96,22 @@ class StatewideTesting
     almost_there = writing.zip(close_hash.values)
     almost_there
     here = almost_there.last.flatten
+    array = []
+    here.each do |x|
+      if x.class == Hash
+        array << x
+      end
+    end
+    new_hash = {}
+    new_hash[here.first] = array
+
+    race_hash = {}
+    go = almost_there.map do |x|
+      race_hash[x.first.first] = x[1], x[2]
+    end
+
+
+
     # hi = Hash[here.first, [here[1], here[2], here[3]]]
     # {2011=>0.816, 2012=>0.818, 2013=>0.805, 2014=>0.8}
     # {2011=>0.897, 2012=>0.893, 2013=>0.901, 2014=>0.855}
