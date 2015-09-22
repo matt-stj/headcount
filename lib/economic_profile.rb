@@ -1,4 +1,4 @@
-class EconomicData
+class EconomicProfile
   attr_reader :economic_profile
 
   def initialize(data)
