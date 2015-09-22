@@ -27,7 +27,7 @@ class HeadcountAnalyst
     state_average = (state_data.values.inject(0, :+))/(state_data.values.size)
     district_average = (district_data.values.inject(0, :+))/(district_data.values.size)
     difference = district_average - state_average
-    
+
     if difference < 0
       difference = difference.to_s[0..5].to_f
     else
