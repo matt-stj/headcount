@@ -1,5 +1,5 @@
 class LoadFromCSVS
-  attr_reader :statewide_testing
+  attr_reader :statewide_testing, :economic_profile
   RACES_AND_SEXES = { :all_students => "ALL STUDENTS",
             :asian=>"ASIAN STUDENTS",
             :black=>"BLACK STUDENTS",
@@ -66,6 +66,7 @@ class LoadFromCSVS
         median_household_income:        {},
         school_aged_childen_in_poverty: {},
         title_one:                      {},
+        free_or_reduced_lunch:          {},
       }
     }
 
@@ -349,20 +350,17 @@ class LoadFromCSVS
       end
     end
 
-    def self.school_aged_childen_in_poverty(path, repo_data, file)
+    def self.load_school_aged_childen_in_poverty(path, repo_data, file)
       rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       remove_numbers_from_rows(rows)
       group_by(rows).each do |district_name, rows|
         data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_s[0..4].to_f] }.to_h
 
-
-        #needs to work for numbers and percents
-        district = district_for(district_name, repo_data)
+        district ||= district_for(district_name, repo_data)
         repo_data[district_name.upcase][:economic_profile][:school_aged_childen_in_poverty] = data
       end
     end
 
-    ## need free or reducd lunch
     def self.load_title_one(path, repo_data, file)
       rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
       group_by(rows).each do |district_name, rows|
@@ -372,6 +370,25 @@ class LoadFromCSVS
         repo_data[district_name.upcase][:economic_profile][:title_one] = data
       end
     end
+
+    def self.remove_poverty_levels_from_rows(rows)
+      rows.delete_if do |row|
+        row[:poverty_level] == "Eligible for Free Lunch" || row[:poverty_level] == "Eligible for Reduced Price Lunch"
+      end
+    end
+
+    def self.load_free_or_reduced_lunch(path, repo_data, file)
+      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
+      remove_numbers_from_rows(rows)
+      remove_poverty_levels_from_rows(rows)
+      group_by(rows).each do |district_name, rows|
+        data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_s[0..4].to_f] }.to_h
+
+        district = district_for(district_name, repo_data)
+        repo_data[district_name.upcase][:economic_profile][:free_or_reduced_lunch] = data
+      end
+    end
+
 
   #######END ECONOMIC -----------------------
 

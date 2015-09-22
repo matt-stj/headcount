@@ -28,8 +28,9 @@ class DistrictRepository < LoadFromCSVS
     statewide_testing_load_writing_proficiency_by_race(path, repo_data, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv')
     ###economic#####
     load_median_household_income(path, repo_data, 'Median household income.csv')
-    school_aged_childen_in_poverty(path, repo_data, 'School-aged children in poverty.csv')
+    load_school_aged_childen_in_poverty(path, repo_data, 'School-aged children in poverty.csv')
     load_title_one(path, repo_data, 'Title I students.csv')
+    load_free_or_reduced_lunch(path, repo_data, 'Students qualifying for free or reduced price lunch.csv')
     # statewide_testing_load_writing_proficiency_by_race_for_all(path, repo_data) SHOULD HAPPEN IN METHOD - NOT BE RELOADED
     repo = DistrictRepository.new(repo_data)
     repo
