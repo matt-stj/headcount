@@ -89,4 +89,20 @@ class StatewideTestingTest < Minitest::Test
     assert_equal expected_result, academy_20.statewide_testing.proficient_by_race_or_ethnicity(:asian)
   end
 
+  def test_it_removes_some_bullshit
+    make_a_dr
+    east_yuma = @dr.find_by_name('EAST YUMA COUNTY RJ-2').statewide_testing
+    west_yuma = @dr.find_by_name('WEST YUMA COUNTY RJ-1').statewide_testing
+    woodlin   = @dr.find_by_name('WOODLIN R-104').statewide_testing
+
+    expected_1  = {}
+    expected_2  = {2008=>{:writing=>0.341}, 2009=>{:writing=>0.402}}
+    expected_3  = {2008=>{:math=>0.512}, 2009=>{:math=>0.458}}
+
+    assert_equal expected_1, woodlin.proficient_by_grade(3)
+    assert_equal expected_2, east_yuma.proficient_by_grade(3)
+    assert_equal expected_3, west_yuma.proficient_by_grade(3)
+    binding.pry
+  end
+
 end
