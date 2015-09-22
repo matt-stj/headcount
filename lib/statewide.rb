@@ -11,10 +11,11 @@ class StatewideTesting
 
   def proficient_by_grade(grade)
     if grade == 3
-      @data.fetch(:third_grade_proficiency)
+      @data.fetch(:third_grade_proficiency, UnknownDataError)
     elsif grade == 8
-      @data.fetch(:eigth_grade_proficiency)
+      @data.fetch(:eigth_grade_proficiency, UnknownDataError)
     else
+      ##not sure if we still need this becuase of the argumet above
       raise UnknownDataError
     end
   end
@@ -34,11 +35,11 @@ class StatewideTesting
 
   def proficient_for_subject_in_year(subject, year)
     if subject == :math
-      @data.fetch(:math_proficiency_by_race).fetch(year).fetch(:"all students")
+      @data.fetch(:math_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
     elsif subject == :reading
-      @data.fetch(:reading_proficiency_by_race).fetch(year).fetch(:"all students")
+      @data.fetch(:reading_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
     elsif subject == :writing
-      @data.fetch(:writing_proficiency_by_race).fetch(year).fetch(:"all students")
+      @data.fetch(:writing_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
     else
       raise UnknownDataError
     end

@@ -444,7 +444,7 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal expected_result_1, alamosa.enrollment.participation_by_race_or_ethnicity(:hispanic)
     assert_equal expected_result_2, colorado.enrollment.participation_by_race_or_ethnicity(:asian)
-    # assert_raises(UnknownDataError) { alamosa.enrollment.participation_by_race_or_ethnicity(:reptile)
+    assert_raises(UnknownRaceError) { alamosa.enrollment.participation_by_race_or_ethnicity(:reptile)}
 
   end
 
