@@ -1,5 +1,3 @@
-require 'pry'
-
 class UnknownDataError < StandardError
 end
 
@@ -61,11 +59,10 @@ class StatewideTesting
     reading_proficiency = @data.fetch(:reading_proficiency_by_race)
     writing_proficiency = @data.fetch(:writing_proficiency_by_race)
 
-    math_proficiencies = math_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result binding.pry}
+    math_proficiencies = math_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
     reading_proficiencies = reading_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
     writing_proficiencies = writing_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
     binding.pry
-
     # {2011=>0.816, 2012=>0.818, 2013=>0.805, 2014=>0.8}
     # {2011=>0.897, 2012=>0.893, 2013=>0.901, 2014=>0.855}
     # {2011=>0.826, 2012=>0.808, 2013=>0.81, 2014=>0.789}
@@ -80,7 +77,7 @@ class StatewideTesting
   end
 
   def method_name(race)
-    
+
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)

@@ -62,7 +62,7 @@ class LoadFromCSVS
         writing_proficiency_by_race:    {},
       },
 
-      economic_data: {
+      economic_profile: {
         median_household_income:        {},
         school_aged_childen_in_poverty: {},
         title_one:                      {},
@@ -345,7 +345,7 @@ class LoadFromCSVS
         #keys are currently strings as ranges like this "2005-2009"
 
         district = district_for(district_name, repo_data)
-        repo_data[district_name.upcase][:economic_data][:median_household_income] = data
+        repo_data[district_name.upcase][:economic_profile][:median_household_income] = data
       end
     end
 
@@ -358,7 +358,7 @@ class LoadFromCSVS
 
         #needs to work for numbers and percents
         district = district_for(district_name, repo_data)
-        repo_data[district_name.upcase][:economic_data][:school_aged_childen_in_poverty] = data
+        repo_data[district_name.upcase][:economic_profile][:school_aged_childen_in_poverty] = data
       end
     end
 
@@ -369,7 +369,7 @@ class LoadFromCSVS
         data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_s[0..4].to_f] }.to_h
 
         district = district_for(district_name, repo_data)
-        repo_data[district_name.upcase][:economic_data][:title_one] = data
+        repo_data[district_name.upcase][:economic_profile][:title_one] = data
       end
     end
 
