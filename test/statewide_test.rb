@@ -60,7 +60,7 @@ class StatewideTestingTest < Minitest::Test
     assert_equal 0.845, academy_20.statewide_testing.proficient_for_subject_in_year(:reading, 2012)
     assert_equal 0.720, academy_20.statewide_testing.proficient_for_subject_in_year(:writing, 2013)
     assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_for_subject_in_year(:cooking, 2013) }
-    #NEED TO RAISE ERROR FOR ALL OTHER POTENTIAL ERROR CASES (YEAR)
+    assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_for_subject_in_year(:math, 2010) }
   end
 
   def test_proficient_for_subject_by_grade_eigth_grade

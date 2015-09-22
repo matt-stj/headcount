@@ -34,11 +34,17 @@ class StatewideTesting
 
   def proficient_for_subject_in_year(subject, year)
     if subject == :math
-      @data.fetch(:math_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
+      math_data = @data.fetch(:math_proficiency_by_race)
+      if math_data.has_key?(year)
+        math_data.fetch(year).fetch(:"all students")
+      else
+        raise UnknownDataError
+      end
+      #Need to refactor for this to be shorter and for the bottom two cases to raise the same error as above.
     elsif subject == :reading
-      @data.fetch(:reading_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
+      @data.fetch(:reading_proficiency_by_race).fetch(year, UnknownDataError).fetch(:"all students")
     elsif subject == :writing
-      @data.fetch(:writing_proficiency_by_race, UnknownDataError).fetch(year).fetch(:"all students", UnknownDataError)
+      @data.fetch(:writing_proficiency_by_race).fetch(year, UnknownDataError).fetch(:"all students")
     else
       raise UnknownDataError
     end

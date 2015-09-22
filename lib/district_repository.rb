@@ -3,6 +3,7 @@ require_relative 'enrollment_loader'
 require_relative 'enrollment'
 require_relative 'district'
 require_relative 'statewide'
+require_relative 'headcount_analyst'
 
 class DistrictRepository < LoadFromCSVS
   attr_reader :districts, :statewide_testing
