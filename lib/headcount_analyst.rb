@@ -39,10 +39,24 @@ class HeadcountAnalyst
     end
   end
 
+  #refactor into kindergarten_method_above
+  def kindergarten_participation_average_for_single_district(district)
+    district_data = districts.fetch(district).enrollment.kindergarten_participation_by_year
+    district_average = (district_data.values.inject(0, :+))/(district_data.values.size)
+  end
+
   def kindergarten_participation_against_household_income(district)
-    income_data = districts.fetch(district).economic_profile.data.fetch(:median_household_income)
-    average_income = (income_data.values.inject(0, :+))/(income_data.values.size)
-    #take average and do some shit
+    district_income_data = districts.fetch(district).economic_profile.data.fetch(:median_household_income)
+    district_average_income = (district_income_data.values.inject(0, :+))/(district_income_data.values.size)
+
+    state_income_data = districts.fetch("COLORADO").economic_profile.data.fetch(:median_household_income)
+    state_average_income = (state_income_data.values.inject(0, :+))/(state_income_data.values.size)
+
+    variation_from_state = (district_average_income.to_f/state_average_income.to_f)
+
+    kindergarten_participation = kindergarten_participation_rate_variation(district, 'state')
+
+    variation = (kindergarten_participation/variation_from_state)
   end
 
 end
