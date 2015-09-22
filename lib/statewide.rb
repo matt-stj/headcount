@@ -1,3 +1,5 @@
+require 'pry'
+
 class UnknownDataError < StandardError
 end
 
@@ -45,7 +47,40 @@ class StatewideTesting
   end
 
   def proficient_by_race_or_ethnicity(race)
-    #come back to this
+    proficiencies = {
+      math: :math_proficiency_by_race,
+      reading: :reading_proficiency_by_race,
+      writing: :writing_proficiency_by_race
+    }
+
+    math = proficiencies.fetch(:math)
+    reading = proficiencies.fetch(:reading)
+    writing = proficiencies.fetch(:writing)
+
+    math_proficiency = @data.fetch(:math_proficiency_by_race)
+    reading_proficiency = @data.fetch(:reading_proficiency_by_race)
+    writing_proficiency = @data.fetch(:writing_proficiency_by_race)
+
+    math_proficiencies = math_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result binding.pry}
+    reading_proficiencies = reading_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
+    writing_proficiencies = writing_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
+    binding.pry
+
+    # {2011=>0.816, 2012=>0.818, 2013=>0.805, 2014=>0.8}
+    # {2011=>0.897, 2012=>0.893, 2013=>0.901, 2014=>0.855}
+    # {2011=>0.826, 2012=>0.808, 2013=>0.81, 2014=>0.789}
+    # year = pair[0]; result[race] = pair[1].fetch(year); result
+    # {:asian =>
+    #   { 2011 => {math: 0.816, reading: 0.897, writing: 0.826},
+    #     2012 => {math: 0.818, reading: 0.893, writing: 0.808},
+    #     2013 => {math: 0.805, reading: 0.901, writing: 0.810},
+    #     2014 => {math: 0.800, reading: 0.855, writing: 0.789},
+    #   }
+    # }
+  end
+
+  def method_name(race)
+    
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
