@@ -380,9 +380,9 @@ class EnrollmentTest < Minitest::Test
     moffat = @dr.find_by_name("MOFFAT 2")
     northglenn = @dr.find_by_name("NORTHGLENN-THORNTON 12")
 
-    assert_raises(UnknownDataError) { academy_20.enrollment.dropout_rate_for_race_or_ethnicity(:alien) }
-    assert_raises(UnknownDataError) { moffat.enrollment.dropout_rate_for_race_or_ethnicity(:crustacean) }
-    assert_raises(UnknownDataError) { northglenn.enrollment.dropout_rate_for_race_or_ethnicity(:marsupial) }
+    assert_raises(UnknownRaceError) { academy_20.enrollment.dropout_rate_for_race_or_ethnicity(:alien) }
+    assert_raises(UnknownRaceError) { moffat.enrollment.dropout_rate_for_race_or_ethnicity(:crustacean) }
+    assert_raises(UnknownRaceError) { northglenn.enrollment.dropout_rate_for_race_or_ethnicity(:marsupial) }
   end
 
   def test_dropout_rate_for_race_or_ethnicity_in_year
@@ -413,9 +413,9 @@ class EnrollmentTest < Minitest::Test
     kiowa = @dr.find_by_name("KIOWA C-2")
     lewis_palmer = @dr.find_by_name("LEWIS-PALMER 38")
 
-    assert_raises(UnknownDataError) { academy_20.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:reptile, 2012) }
-    assert_raises(UnknownDataError) { kiowa.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:amphibian, 2011) }
-    assert_raises(UnknownDataError) { lewis_palmer.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:bird, 2012) }
+    assert_raises(UnknownRaceError) { academy_20.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:reptile, 2012) }
+    assert_raises(UnknownRaceError) { kiowa.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:amphibian, 2011) }
+    assert_raises(UnknownRaceError) { lewis_palmer.enrollment.dropout_rate_for_race_or_ethnicity_in_year(:bird, 2012) }
   end
 
   def test_participation_by_race_or_ethnicity
