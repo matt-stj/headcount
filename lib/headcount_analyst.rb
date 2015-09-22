@@ -41,6 +41,7 @@ class HeadcountAnalyst
 
   def kindergarten_participation_against_household_income(district)
     income_data = districts.fetch(district).economic_profile.data.fetch(:median_household_income)
+    average_income = (income_data.values.inject(0, :+))/(income_data.values.size)
     #take average and do some shit
   end
 
