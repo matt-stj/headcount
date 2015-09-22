@@ -1,7 +1,6 @@
 class UnknownDataError < StandardError
 end
 
-
 class StatewideTesting
   attr_reader :statewide_testing
 

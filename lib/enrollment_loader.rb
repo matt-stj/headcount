@@ -32,6 +32,12 @@ class LoadFromCSVS
     end
   end
 
+  def self.remove_poverty_levels_from_rows(rows)
+      rows.delete_if do |row|
+        row[:poverty_level] == "Eligible for Free Lunch" || row[:poverty_level] == "Eligible for Reduced Price Lunch"
+      end
+    end
+
   def self.group_by(rows)
     rows.group_by { |row| row.fetch(:location) }
   end
@@ -368,12 +374,6 @@ class LoadFromCSVS
 
         district = district_for(district_name, repo_data)
         repo_data[district_name.upcase][:economic_profile][:title_one] = data
-      end
-    end
-
-    def self.remove_poverty_levels_from_rows(rows)
-      rows.delete_if do |row|
-        row[:poverty_level] == "Eligible for Free Lunch" || row[:poverty_level] == "Eligible for Reduced Price Lunch"
       end
     end
 
