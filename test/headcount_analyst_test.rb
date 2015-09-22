@@ -26,5 +26,11 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal -0.018, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:math)
   end
 
+  def test_top_statewide_testing_year_over_year_growth_eigth_grade
+    make_a_ha
+
+    assert_equal 0.039, @ha.top_statewide_testing_year_over_year_growth_in_8th_grade(:reading)
+  end
+
 
 end
