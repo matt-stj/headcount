@@ -16,6 +16,8 @@ class StatewideTestingTest < Minitest::Test
     colorado = @dr.find_by_name("COLORADO")
 
     assert_equal 0.656, colorado.statewide_testing.proficient_for_subject_by_race_in_year(:writing, :asian, 2011)
+    assert_raises(UnknownDataError) { colorado.statewide_testing.proficient_for_subject_by_race_in_year(:science, :asian, 2011) }
+    assert_raises(UnknownDataError) { colorado.statewide_testing.proficient_for_subject_by_race_in_year(:reading, :barbarian, 2011) }
   end
 
   def test_proficient_by_grade_third_grade

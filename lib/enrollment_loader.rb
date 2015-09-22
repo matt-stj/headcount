@@ -7,9 +7,9 @@ class LoadFromCSVS
             :hispanic=>"HISPANIC STUDENTS",
             :native_american=>"NATIVE AMERICAN STUDENTS",
             :two_or_more=>"TWO OR MORE RACES",
-            :white => "WHITE STUDENTS",
-            :male => "MALE STUDENTS",
-            :female => "FEMALE STUDENTS"
+            :white=> "WHITE STUDENTS",
+            :male=> "MALE STUDENTS",
+            :female=> "FEMALE STUDENTS"
           }
 
   RACES = {:asian=>"ASIAN STUDENTS",
@@ -17,9 +17,19 @@ class LoadFromCSVS
           :pacific_islander=>"NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER",
           :hispanic=>"HISPANIC STUDENTS",
           :two_or_more=>"TWO OR MORE RACES",
-          :white => "WHITE STUDENTS",
-          :native_american => "AMERICAN INDIAN STUDENTS",
-          :total => "TOTAL"
+          :white=> "WHITE STUDENTS",
+          :native_american=> "AMERICAN INDIAN STUDENTS",
+          :total=> "TOTAL"
+          }
+
+  RACES_TWO = {:asian=>"ASIAN",
+          :black=>"BLACK",
+          :pacific_islander=>"HAWAIIAN/PACIFIC ISLANDER",
+          :hispanic=>"HISPANIC",
+          :two_or_more=>"TWO OR MORE",
+          :white=> "WHITE",
+          :native_american=> "NATIVE AMERICAN",
+          :all=> "ALL STUDENTS"
           }
 
   def self.path
@@ -264,7 +274,7 @@ class LoadFromCSVS
         .map {|year, rows|
           [year,
             rows.map {|row|
-              [ row.fetch(:race_ethnicity).downcase.to_sym,
+              [ RACES_TWO.key(row.fetch(:race_ethnicity).upcase),
                 row.fetch(:data).to_s[0..4].to_f
               ]
             }.to_h
@@ -286,7 +296,7 @@ class LoadFromCSVS
         .map {|year, rows|
           [year,
             rows.map {|row|
-              [ row.fetch(:race_ethnicity).downcase.to_sym,
+              [ RACES_TWO.key(row.fetch(:race_ethnicity).upcase),
                 row.fetch(:data).to_s[0..4].to_f
               ]
             }.to_h
@@ -308,7 +318,7 @@ class LoadFromCSVS
         .map {|year, rows|
           [year,
             rows.map {|row|
-              [ row.fetch(:race_ethnicity).downcase.to_sym,
+              [ RACES_TWO.key(row.fetch(:race_ethnicity).upcase),
                 row.fetch(:data).to_s[0..4].to_f
               ]
             }.to_h
