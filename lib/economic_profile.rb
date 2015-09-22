@@ -2,7 +2,7 @@ class UnknownDataError < StandardError
 end
 
 class EconomicProfile
-  attr_reader :economic_profile
+  attr_reader :economic_profile, :data
 
   def initialize(data)
     @data = data
