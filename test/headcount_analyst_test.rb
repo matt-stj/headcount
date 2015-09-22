@@ -27,6 +27,7 @@ class HeadcountAnalystTest < Minitest::Test
   def test_kindergarten_participation_against_household_income
     make_a_ha
 
+
     assert_equal -0.080, @ha.kindergarten_participation_against_household_income("ACADEMY 20")
 
     #assert something when fetched district is nil
