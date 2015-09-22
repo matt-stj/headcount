@@ -13,6 +13,7 @@ class EnrollmentTest < Minitest::Test
   def test_edge_case_truncate_floats
     make_a_dr
     academy_20 = @dr.find_by_name("ACADEMY 20")
+    binding.pry
     expected_result = {2010=>0.895,
                        2011=>0.895,
                        2012=>0.889,
@@ -507,6 +508,8 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal expected_result_1, alamosa.enrollment.participation_by_race_or_ethnicity(:hispanic)
     assert_equal expected_result_2, colorado.enrollment.participation_by_race_or_ethnicity(:asian)
+    # assert_raises(UnknownDataError) { alamosa.enrollment.participation_by_race_or_ethnicity(:reptile)
+
   end
 
   def test_participation_by_race_or_ethnicity_in_year
