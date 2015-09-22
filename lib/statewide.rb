@@ -103,8 +103,6 @@ class StatewideTesting
     # }
   end
 
-  def method_name(race)
-
   def intermediate_math_method_for_race(race)
     math_data = @data.fetch(:math_proficiency_by_race)
     math_inner_hash = {}
