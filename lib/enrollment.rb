@@ -145,6 +145,16 @@ class Enrollment
   end
 
   def participation_by_race_or_ethnicity_in_year(year)
-    @data.fetch(:enrollment_by_race).fetch(year)
+    wanted_keys = [:native_american, :asian, :black, :hispanic, :pacific_islander,
+      :two_or_more, :white]
+    data = @data.fetch(:enrollment_by_race)
+    if data.has_key?(year)
+      data.fetch(year).select { |key,_| wanted_keys.include? key }
+    else
+      nil
+    end
+
   end
+
+
 end

@@ -37,20 +37,25 @@ class DistrictRepository < LoadFromCSVS
 
   def initialize(repository_data)
     @districts = repository_data.map { |name, district_data|
-      [name, District.new(district_data)]}.to_h
+      [name, District.new(name, district_data)]}.to_h
   end
 
   def find_by_name(name)
-    if !@districts.has_key?(name) == true
-      return nil
-    else
-      @districts.fetch(name)
+    @districts.fetch(name.upcase, nil)
+  end
+
+  def find_all_matching(fragment)
+    output = []
+    @districts.map do |district, value|
+      if district.include?(fragment.upcase)
+        output << value
+      end
     end
+    output
   end
 
   def name(name)
     if @districts.has_key?(name.upcase)
-      return name.upcase
     end
   end
 end
