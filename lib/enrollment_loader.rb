@@ -42,9 +42,10 @@ class LoadFromCSVS
     rows.group_by { |row| row.fetch(:location) }
   end
 
-  def self.data_format_checker(rows)
-    formats = rows.map {|row| row.fetch(:dataformat) }
-    formats.uniq!
+  def self.remove_unrecognized_data_from_rows(rows)
+    rows.delete_if do |row|
+      row[:data] == "N/A" || row[:data] == "#VALUE!" || row[:data] == "LNE" || row[:data] == "\r\n" || row[:data] == "0" || row[:data] == nil
+    end
   end
 
   def self.district_for(name, repo_data)
@@ -207,6 +208,7 @@ class LoadFromCSVS
 
   def self.statewide_testing_load_third_grade_students(path, repo_data, file)
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
+    remove_unrecognized_data_from_rows(rows)
     grouped_rows = rows.group_by { |row| row.fetch(:location)}
     # next unless not bullshit (NA, N/A, LNE, #VALUE!, \r\n)
     hash = {}
@@ -230,6 +232,7 @@ class LoadFromCSVS
 
   def self.statewide_testing_load_eight_grade_students(path, repo_data, file)
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
+    remove_unrecognized_data_from_rows(rows)
     grouped_rows = rows.group_by { |row| row.fetch(:location)}
     hash = {}
     location_with_years = grouped_rows.map do |location, rows|
