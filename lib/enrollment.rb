@@ -1,6 +1,9 @@
 class UnknownDataError < StandardError
 end
 
+class UnknownRaceError < StandardError
+end
+
 class Enrollment
   attr_reader :annual_enrollment, :enrollment, :data, :statewide_testing
 
@@ -114,10 +117,11 @@ class Enrollment
     data = @data.fetch(:dropout_rate_by_race)
     race_data_by_year = {}
     data.each_pair do |key, value|
-      if value.has_key?(race) == false
-        raise UnknownDataError
+      if value.has_key?(race)
+        race_data_by_year[key] = value.fetch(race, UnknownRaceError)
+      else
+        raise UnknownRaceError
       end
-        race_data_by_year[key] = value.fetch(race)
     end
     race_data_by_year
   end
@@ -132,15 +136,15 @@ class Enrollment
   end
 
   def participation_by_race_or_ethnicity(race)
+    data = @data.fetch(:enrollment_by_race)
     race_data_by_year = {}
-      @data.fetch(:enrollment_by_race).each_pair do |key, value|
-      race_data_by_year[key] = value.fetch(race)
+      data.each_pair do |key, value|
+        if value.has_key?(race) == false
+          raise UnknownRaceError
+        else
+          race_data_by_year[key] = value.fetch(race, UnknownRaceError)
+        end
       end
-      race_data_by_year.each_pair do |key, value|
-      if value > 1
-        race_data_by_year[key] = (value/participation_in_year(key)).to_s[0..5].to_f.round(3)
-      end
-    end
     race_data_by_year
   end
 
