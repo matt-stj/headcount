@@ -55,8 +55,7 @@ class StatewideTestingTest < Minitest::Test
 
   def test_proficient_for_subject_in_year
     make_a_dr
-    dr = @dr
-    academy_20 = dr.find_by_name("ACADEMY 20")
+    academy_20 = @dr.find_by_name("ACADEMY 20")
 
     assert_equal 0.680, academy_20.statewide_testing.proficient_for_subject_in_year(:math, 2011)
     assert_equal 0.845, academy_20.statewide_testing.proficient_for_subject_in_year(:reading, 2012)
@@ -67,8 +66,7 @@ class StatewideTestingTest < Minitest::Test
 
   def test_proficient_for_subject_by_grade_eigth_grade
     make_a_dr
-    dr = @dr
-    academy_20 = dr.find_by_name("ACADEMY 20")
+    academy_20 = @dr.find_by_name("ACADEMY 20")
     #should be district.statewide.method_name
     assert_equal 0.681, academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 8, 2012)
     assert_raises(UnknownDataError) { academy_20.statewide_testing.proficient_for_subject_by_grade_in_year(:science, 8, 2012) }

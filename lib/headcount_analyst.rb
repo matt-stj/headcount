@@ -24,8 +24,11 @@ class HeadcountAnalyst
                 year
               }
     growth = (min_max[0][1] - min_max[1][1])
-    #.to_s[0..4].to_f
-    binding.pry
+    if growth < 0
+      growth.to_s[0..5].to_f
+    else
+      growth.to_s[0..4].to_f
+    end
   end
 
   def top_statewide_testing_year_over_year_growth_in_8th_grade(subject)
