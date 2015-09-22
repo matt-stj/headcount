@@ -47,23 +47,34 @@ class StatewideTesting
   end
 
   def proficient_by_race_or_ethnicity(race)
-    proficiencies = {
-      math: :math_proficiency_by_race,
-      reading: :reading_proficiency_by_race,
-      writing: :writing_proficiency_by_race
-    }
+    # proficiencies = {
+    #   math: :math_proficiency_by_race,
+    #   reading: :reading_proficiency_by_race,
+    #   writing: :writing_proficiency_by_race
+    # }
+    #
+    # math = proficiencies.fetch(:math)
+    # reading = proficiencies.fetch(:reading)
+    # writing = proficiencies.fetch(:writing)
+    #
+    # math_proficiency = @data.fetch(:math_proficiency_by_race)
+    # reading_proficiency = @data.fetch(:reading_proficiency_by_race)
+    # writing_proficiency = @data.fetch(:writing_proficiency_by_race)
+    #
+    # math_proficiencies = math_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result binding.pry}
+    # reading_proficiencies = reading_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
+    # writing_proficiencies = writing_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
+    math = intermediate_math_method_for_race(race)
+    reading = intermediate_reading_method_for_race(race)
+    writing = intermediate_writing_method_for_race(race)
 
-    math = proficiencies.fetch(:math)
-    reading = proficiencies.fetch(:reading)
-    writing = proficiencies.fetch(:writing)
 
-    math_proficiency = @data.fetch(:math_proficiency_by_race)
-    reading_proficiency = @data.fetch(:reading_proficiency_by_race)
-    writing_proficiency = @data.fetch(:writing_proficiency_by_race)
-
-    math_proficiencies = math_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result binding.pry}
-    reading_proficiencies = reading_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
-    writing_proficiencies = writing_proficiency.reduce({}) { |result, pair| year = pair[0]; result[race] = pair[1].fetch(race); result }
+    combined = math.zip(reading)
+    close_hash = combined.map {|first, second| first.zip(second)}.to_h
+    almost_there = writing.zip(close_hash.values)
+    almost_there
+    here = almost_there.last.flatten
+    # hi = Hash[here.first, [here[1], here[2], here[3]]]
     binding.pry
 
     # {2011=>0.816, 2012=>0.818, 2013=>0.805, 2014=>0.8}
@@ -79,9 +90,36 @@ class StatewideTesting
     # }
   end
 
-  def method_name(race)
-    
+  def intermediate_math_method_for_race(race)
+    math_data = @data.fetch(:math_proficiency_by_race)
+    math_inner_hash = {}
+    math_data.each_pair do |key, value|
+      math_inner_hash[key] = Hash[:math, value.fetch(race)]
+    end
+    math_hash = {}
+    math_hash[race.to_sym] = math_inner_hash
   end
+
+  def intermediate_reading_method_for_race(race)
+    reading_data = @data.fetch(:reading_proficiency_by_race)
+    reading_inner_hash = {}
+    reading_data.each_pair do |key, value|
+      reading_inner_hash[key] = Hash[:reading, value.fetch(race)]
+    end
+    reading_hash = {}
+    reading_hash[race.to_sym] = reading_inner_hash
+  end
+
+  def intermediate_writing_method_for_race(race)
+    writing_data = @data.fetch(:writing_proficiency_by_race)
+    writing_inner_hash = {}
+    writing_data.each_pair do |key, value|
+      writing_inner_hash[key] = Hash[:writing, value.fetch(race)]
+    end
+    writing_hash = {}
+    writing_hash[race.to_sym] = writing_inner_hash
+  end
+
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
     proficiencies = {
