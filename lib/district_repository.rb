@@ -8,11 +8,7 @@ class DistrictRepository < LoadFromCSVS
   attr_reader :districts, :statewide_testing
 
   def self.from_csv(path)
-    # eventually we should just receive the path and not have this stuff
-      path = File.expand_path '../data', __dir__
-    # eventually (meaning once all the ones below are correct)
-    # repo_data = CsvLoader.new(path).load
-    # DistrictRepository.new(repo_data)
+    path = File.expand_path '../data', __dir__
 
     repo_data ||= {}
     load_pupil_enrollment(path, repo_data, 'Pupil enrollment.csv')

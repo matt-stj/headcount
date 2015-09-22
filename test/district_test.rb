@@ -26,6 +26,6 @@ class DistrictTest < Minitest::Test
   def test_calling_name_on_District_returns_the_upcased_name_of_the_District
     dr = DistrictRepository.from_csv('/Pupil enrollment.csv')
 
-    assert_equal "COLORADO", dr.name("Colorado")
+    assert_equal "COLORADO", dr.find_by_name("Colorado").name
   end
 end

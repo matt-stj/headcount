@@ -49,7 +49,15 @@ class StatewideTesting
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-    #this is dependant upon proficient_by_race_or_ethnicity
+    proficiencies = {
+      math: :math_proficiency_by_race,
+      reading: :reading_proficiency_by_race,
+      writing: :writing_proficiency_by_race
+    }
+
+    proficiency = proficiencies.fetch(subject)
+
+    @data.fetch(proficiency).fetch(year).fetch(race)
   end
 
   def statewide_combining_proficienty_by_race_and_subject(race)
