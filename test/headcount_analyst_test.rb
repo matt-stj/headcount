@@ -17,10 +17,10 @@ class HeadcountAnalystTest < Minitest::Test
   def test_kindergarten_participation_rate_variation_against_state
     make_a_ha
 
-    assert_equal -0.123, @ha.kindergarten_participation_rate_variation("ACADEMY 20", 'state')
-    assert_equal 0, @ha.kindergarten_participation_rate_variation("ACADEMY 20", "ACADEMY 20")
-    assert_equal -0.593, @ha.kindergarten_participation_rate_variation("ACADEMY 20", "ASPEN 1")
-    assert_raises(UnknownDataError) { @ha.kindergarten_participation_rate_variation("ACADEMY 20", "NEW YORK") }
+    assert_equal -0.123, @ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'state')
+    assert_equal 0, @ha.kindergarten_participation_rate_variation("ACADEMY 20", :against => "ACADEMY 20")
+    assert_equal -0.593, @ha.kindergarten_participation_rate_variation("ACADEMY 20", :against =>  "ASPEN 1")
+    assert_raises(UnknownDataError) { @ha.kindergarten_participation_rate_variation("ACADEMY 20", :against =>  "NEW YORK") }
     #assert something when fetched district is nil
     # assert_equal 0, @ha.kindergarten_participation_rate_variation("ACADEMY 20", "hi there")
   end
@@ -55,8 +55,8 @@ class HeadcountAnalystTest < Minitest::Test
     make_a_ha
 
     assert_equal -0.842, @ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
-    assert_equal -0.394, @ha.kindergarten_participation_rate_variation("CHERRY CREEK 5", 'state')
-    assert_equal 0.108, @ha.graduation_variation("CHERRY CREEK 5")
+    assert_equal -0.394, @ha.kindergarten_participation_rate_variation("CHERRY CREEK 5", :against => 'state')
+    assert_equal 0.108, @ha.grad_diff_from_state("CHERRY CREEK 5")
     assert_equal -3.648, @ha.kindergarten_participation_against_high_school_graduation("CHERRY CREEK 5")
   end
 

@@ -22,7 +22,11 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_rate_variation(district_1, district_2)
-    district_2 = ("COLORADO") if district_2 == 'state'
+    if district_2.fetch(:against) == 'state'
+      district_2 = ("COLORADO")
+    else
+      district_2 = district_2.fetch(:against)
+    end
     district_1_average = average_kindergarten_participation(district_1)
     district_2_average = average_kindergarten_participation(district_2)
     difference = district_1_average - district_2_average
@@ -36,7 +40,7 @@ class HeadcountAnalyst
     state_average_income = average_income_by_district("COLORADO")
 
     participation_income_variance = (district_average_income.to_f/state_average_income.to_f)
-    kindergarten_participation = kindergarten_participation_rate_variation(district, 'state')
+    kindergarten_participation = kindergarten_participation_rate_variation(district, :against => 'state')
     participation_against_income_variance = (kindergarten_participation/participation_income_variance)
 
     truncate(participation_against_income_variance)
@@ -61,8 +65,8 @@ class HeadcountAnalyst
 
   #### WHEN ARE WE DIVIDING AND WHEN ARE WE SUBTRACTING?? VARIANCE VS. DIFFERENCE ###
   def kindergarten_participation_against_high_school_graduation(district)
-    kindergarten_variation = kindergarten_participation_rate_variation(district, 'state')
-    kindergarten_graduation_variance = (kindergarten_variation.to_f/graduation_variation(district).to_f)
+    kindergarten_variation = kindergarten_participation_rate_variation(district, :against => 'state')
+    kindergarten_graduation_variance = (kindergarten_variation.to_f/grad_diff_from_state(district).to_f)
     result = truncate(kindergarten_graduation_variance)
   end
 
@@ -83,7 +87,7 @@ class HeadcountAnalyst
   ##ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ['district_1', 'district_2', 'district_3', 'district_4']) # => true
 
 
-  def graduation_variation(district)
+  def grad_diff_from_state(district)
     state_average_graduation = average_graduation_rate("COLORADO")
     district_average_graduation = average_graduation_rate(district)
 
