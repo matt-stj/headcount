@@ -118,7 +118,6 @@ class StatewideTesting
     else
       raise UnknownDataError
     end
-    # binding.pry
   end
 
   def statewide_combining_proficienty_by_race_and_subject(race)
