@@ -29,7 +29,7 @@ class HeadcountAnalyst
     end
     district_1_average = average_kindergarten_participation(district_1)
     district_2_average = average_kindergarten_participation(district_2)
-    difference = district_1_average - district_2_average
+    difference = district_1_average / district_2_average
     truncate(difference)
   end
 
@@ -91,7 +91,7 @@ class HeadcountAnalyst
     state_average_graduation = average_graduation_rate("COLORADO")
     district_average_graduation = average_graduation_rate(district)
 
-    difference = district_average_graduation - state_average_graduation
+    difference = district_average_graduation / state_average_graduation
     truncate(difference)
   end
 
@@ -125,7 +125,7 @@ class HeadcountAnalyst
     end
     number_of_trues = results.count { |e| e == true }
     number_of_falses = results.count { |e| e == false }
-    percent = ((number_of_trues.to_f/number_of_falses.to_f)*100).round
+    percent = ((number_of_trues.to_f/districts.size)*100).round
     if percent >= 70
       true
     else
@@ -140,7 +140,7 @@ class HeadcountAnalyst
     end
     number_of_trues = results.count { |e| e == true }
     number_of_falses = results.count { |e| e == false }
-    percent = ((number_of_trues.to_f/number_of_falses.to_f)*100).round
+    percent = ((number_of_trues.to_f/districts.size)*100).round
     if percent >= 70
       true
     else
