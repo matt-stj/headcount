@@ -15,11 +15,37 @@ class HeadcountAnalyst
     @repo.districts
   end
 
-  def top_statewide_testing_year_over_year_growth_in_3rd_grade(subject)
+  def top_statewide_testing_year_over_year_growth_in_3rd_grade(arg)
+    results = []
+
+    districts.map do |district_name, district|
+      statewide_data = district.statewide_testing.data.fetch(:third_grade_proficiency)
+      min_max_data = statewide_data.map { |year, proficiencies| [year, proficiencies.fetch(arg)]}
+                       .select { |year, proficiency| proficiency }
+                       .sort
+
+      next if min_max_data.length < 2
+
+      final_year = min_max_data.max_by { |year, data| year }.first
+      intial_year = min_max_data.min_by  { |year, data| year }.first
+      delta_years = final_year - intial_year
+
+      highest_score = min_max_data.max_by { |year, data| data }.last
+      lowest_score = min_max_data.min_by {|year, data| data }.last
+      delta_scores = highest_score - lowest_score
+
+      change = truncate(delta_scores/delta_years)
+
+      results << [district_name, change]
+    end
+    #results.max_by(#district in here is the number of results) {|year| year.values}
+    results.max_by {|name, year| year }
+  end
+
 
 
     # ["WILEY RE-13 JT", 0.3]
-  end
+
 
   def kindergarten_participation_rate_variation(district_1, district_2)
     if district_2.fetch(:against) == 'state'

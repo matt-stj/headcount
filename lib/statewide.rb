@@ -6,7 +6,7 @@ class StatewideTesting
   POSSIBLE_SUBJECTS = [:reading, :writing, :math]
   POSSIBLE_YEARS = [2011, 2012, 2013, 2014]
 
-  attr_reader :statewide_testing
+  attr_reader :statewide_testing, :data
 
   def initialize(data)
     @data = data
