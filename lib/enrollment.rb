@@ -12,11 +12,7 @@ class Enrollment
   end
 
   def return_nil_when_cant_fetch(year, data)
-    if data.has_key?(year)
-      data.fetch(year)
-    else
-      nil
-    end
+    data.fetch(year) if data.key?(year)
   end
 
   def in_year(year)
@@ -79,37 +75,29 @@ class Enrollment
 
   def dropout_rate_in_year(year)
     data = @data.fetch(:dropout_rate_by_race)
-    if data.has_key?(year)
-      data.fetch(year).fetch(:all_students)
-    else
-      nil
-    end
+    data.fetch(year).fetch(:all_students) if data.key?(year)
   end
 
   def dropout_rate_by_gender_in_year(year)
     wanted_keys = [:female, :male]
     data = @data.fetch(:dropout_rate_by_race)
-    if data.has_key?(year)
-      data.fetch(year).select { |key,_| wanted_keys.include? key }
-    else
-      nil
+    if data.key?(year)
+      data.fetch(year).select { |key, _| wanted_keys.include? key }
     end
   end
 
   def dropout_rate_by_race_in_year(year)
-    wanted_keys = [ :asian,
-                    :black,
-                    :pacific_islander,
-                    :hispanic,
-                    :native_american,
-                    :two_or_more,
-                    :white
+    wanted_keys = [:asian,
+                   :black,
+                   :pacific_islander,
+                   :hispanic,
+                   :native_american,
+                   :two_or_more,
+                   :white
                   ]
     data = @data.fetch(:dropout_rate_by_race)
-    if data.has_key?(year)
-      data.fetch(year).select { |key,_| wanted_keys.include? key }
-    else
-      nil
+    if data.key?(year)
+      data.fetch(year).select { |key, _| wanted_keys.include? key }
     end
   end
 
@@ -117,10 +105,10 @@ class Enrollment
     data = @data.fetch(:dropout_rate_by_race)
     race_data_by_year = {}
     data.each_pair do |key, value|
-      if value.has_key?(race)
+      if value.key?(race)
         race_data_by_year[key] = value.fetch(race, UnknownRaceError)
       else
-        raise UnknownRaceError
+        fail UnknownRaceError
       end
     end
     race_data_by_year
@@ -128,37 +116,28 @@ class Enrollment
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year)
     years = dropout_rate_for_race_or_ethnicity(race)
-    if years.has_key?(year)
-      years.fetch(year)
-    else
-      nil
-    end
+    years.fetch(year) if years.key?(year)
   end
 
   def participation_by_race_or_ethnicity(race)
     data = @data.fetch(:enrollment_by_race)
     race_data_by_year = {}
-      data.each_pair do |key, value|
-        if value.has_key?(race) == false
-          raise UnknownRaceError
-        else
-          race_data_by_year[key] = value.fetch(race, UnknownRaceError)
-        end
+    data.each_pair do |key, value|
+      if value.key?(race) == false
+        fail UnknownRaceError
+      else
+        race_data_by_year[key] = value.fetch(race, UnknownRaceError)
       end
+    end
     race_data_by_year
   end
 
   def participation_by_race_or_ethnicity_in_year(year)
     wanted_keys = [:native_american, :asian, :black, :hispanic, :pacific_islander,
-      :two_or_more, :white]
+                   :two_or_more, :white]
     data = @data.fetch(:enrollment_by_race)
-    if data.has_key?(year)
-      data.fetch(year).select { |key,_| wanted_keys.include? key }
-    else
-      nil
+    if data.key?(year)
+      data.fetch(year).select { |key, _| wanted_keys.include? key }
     end
-
   end
-
-
 end

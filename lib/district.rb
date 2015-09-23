@@ -9,5 +9,4 @@ class District
     @statewide_testing = StatewideTesting.new(data.fetch :statewide_testing)
     @economic_profile = EconomicProfile.new(data.fetch :economic_profile)
   end
-
 end
