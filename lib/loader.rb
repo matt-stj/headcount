@@ -53,7 +53,7 @@ class LoadFromCSVS
     rows.delete_if do |row|
       row[:poverty_level] == 'Eligible for Free Lunch' || row[:poverty_level] == 'Eligible for Reduced Price Lunch'
     end
-    end
+  end
 
   def self.group_by(rows)
     rows.group_by { |row| row.fetch(:location) }
