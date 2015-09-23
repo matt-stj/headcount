@@ -14,11 +14,7 @@ class EconomicProfile
 
   def free_or_reduced_lunch_in_year(year)
     data = @data.fetch(:free_or_reduced_lunch)
-    if data.has_key?(year)
-      free_or_reduced_lunch_by_year.fetch(year)
-    else
-      nil
-    end
+    free_or_reduced_lunch_by_year.fetch(year) if data.key?(year)
   end
 
   def school_aged_children_in_poverty_by_year
@@ -27,11 +23,7 @@ class EconomicProfile
 
   def school_aged_children_in_poverty_in_year(year)
     data = @data.fetch(:school_aged_childen_in_poverty)
-    if data.has_key?(year)
-      school_aged_children_in_poverty_by_year.fetch(year)
-    else
-      nil
-    end
+    school_aged_children_in_poverty_by_year.fetch(year) if data.key?(year)
   end
 
   def title_1_students_by_year
@@ -40,10 +32,6 @@ class EconomicProfile
 
   def title_1_students_in_year(year)
     data = @data.fetch(:title_one)
-    if data.has_key?(year)
-      title_1_students_by_year.fetch(year)
-    else
-      nil
-    end
+    title_1_students_by_year.fetch(year) if data.key?(year)
   end
 end
