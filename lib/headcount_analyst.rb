@@ -33,23 +33,60 @@ class HeadcountAnalyst
     district_average_income = average_income_by_district(district)
     state_average_income = average_income_by_district("COLORADO")
 
-    variation_from_state = (district_average_income.to_f/state_average_income.to_f)
+    participation_income_variance = (district_average_income.to_f/state_average_income.to_f)
     kindergarten_participation = kindergarten_participation_rate_variation(district, 'state')
-    variation = (kindergarten_participation/variation_from_state)
+    participation_against_income_variance = (kindergarten_participation/participation_income_variance)
 
-    truncate(variation)
+    truncate(participation_against_income_variance)
+  end
+
+  def kindergarten_participation_correlates_with_household_income(district)
+    participation = kindergarten_participation_against_household_income(district)
+    if participation >= 0.6 && participation <= 1.5
+      true
+    else
+      false
+    end
+  end
+
+  #### WHEN ARE WE DIVIDING AND WHEN ARE WE SUBTRACTING?? VARIANCE VS. DIFFERENCE ###
+  def kindergarten_participation_against_high_school_graduation(district)
+    kindergarten_variation = kindergarten_participation_rate_variation(district, 'state')
+    district_grad_rate = average_graduation_rate(district)
+    state_grad_rate = average_graduation_rate("COLORADO")
+    grad_variance = district_grad_rate/state_grad_rate
+    grad_variance
+    kindergarten_graduation_variance = (kindergarten_variation/grad_variance)
+    truncate(kindergarten_graduation_variance)
   end
 
   private
 
   def average_kindergarten_participation(district)
-    district_data = districts.fetch(district).enrollment.kindergarten_participation_by_year
-    district_average = (district_data.values.inject(0, :+))/(district_data.values.size)
+    if districts.has_key?(district)
+      district_data = repo.find_by_name(district).enrollment.kindergarten_participation_by_year
+      district_average = (district_data.values.inject(0, :+))/(district_data.values.size)
+    else
+      raise UnknownDataError
+    end
   end
 
   def average_income_by_district(district)
-    district_income_data = districts.fetch(district).economic_profile.data.fetch(:median_household_income)
+    district_income_data = repo.find_by_name(district).economic_profile.data.fetch(:median_household_income)
     district_average_income = (district_income_data.values.inject(0, :+))/(district_income_data.values.size)
+  end
+
+  def graduation_variation(district)
+    state_average_graduation = average_graduation_rate("COLORADO")
+    district_average_graduation = average_graduation_rate(district)
+
+    difference = district_1_average - district_2_average
+    truncate(difference)
+  end
+
+  def average_graduation_rate(district)
+    district_graduation_data = repo.find_by_name(district).enrollment.data.fetch(:graduation_rate)
+    district_average_graduation = (district_graduation_data.values.inject(0, :+))/(district_graduation_data.values.size)
   end
 
   def truncate(value)
