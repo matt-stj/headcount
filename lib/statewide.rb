@@ -55,19 +55,23 @@ class StatewideTesting
   end
 
  def proficient_by_race_or_ethnicity(race)
-  math = intermediate_math_method_for_race(race)
-  reading = intermediate_reading_method_for_race(race)
-  writing = intermediate_writing_method_for_race(race)
+   if POSSIBLE_RACES.include?(race)
+    math = intermediate_math_method_for_race(race)
+    reading = intermediate_reading_method_for_race(race)
+    writing = intermediate_writing_method_for_race(race)
 
-  years = (math.keys + reading.keys + writing.keys).uniq.sort
-  years_to_scores = years.map { |year|
-    scores = { math:    math.fetch(year).fetch(:math),
-      reading: reading.fetch(year).fetch(:reading),
-      writing: writing.fetch(year).fetch(:writing),
-    }
-    [year, scores]
-  }.to_h
-  
+    years = (math.keys + reading.keys + writing.keys).uniq.sort
+    years_to_scores = years.map { |year|
+      scores = { math:    math.fetch(year).fetch(:math),
+        reading: reading.fetch(year).fetch(:reading),
+        writing: writing.fetch(year).fetch(:writing),
+      }
+      [year, scores]
+      }.to_h
+    else
+      raise UnknownDataError
+    end
+
   end
 
 
