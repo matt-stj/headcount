@@ -15,8 +15,10 @@ class HeadcountAnalyst
     @repo.districts
   end
 
-  def top_statewide_testing_year_over_year_growth(subject)
+  def top_statewide_testing_year_over_year_growth_in_3rd_grade(subject)
 
+
+    # ["WILEY RE-13 JT", 0.3]
   end
 
   def kindergarten_participation_rate_variation(district_1, district_2)
@@ -41,8 +43,27 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_correlates_with_household_income(district)
-    participation = kindergarten_participation_against_household_income(district)
-    if participation >= 0.6 && participation <= 1.5
+    if district == 'state'
+      correlation_for_all_districts
+    else
+      participation = kindergarten_participation_against_household_income(district)
+      if participation >= 0.6 && participation <= 1.5
+        true
+      else
+        false
+      end
+    end
+  end
+
+  def correlation_for_all_districts
+    results = []
+    districts.each_pair do |key, value|
+      results << kindergarten_participation_correlates_with_household_income(key)
+    end
+    number_of_trues = results.count { |e| e == true }
+    number_of_falses = results.count { |e| e == false }
+    percent = ((number_of_trues.to_f/number_of_falses.to_f)*100).round
+    if percent >= 70
       true
     else
       false

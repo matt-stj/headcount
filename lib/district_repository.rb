@@ -12,7 +12,7 @@ class DistrictRepository < LoadFromCSVS
     path = File.expand_path '../data', __dir__
 
     repo_data ||= {}
-    load_pupil_enrollment(path, repo_data, 'Pupil enrollment.csv')
+    load_pupil_enrollment(path, repo_data, 'Pupil enrollment')
     load_online_pupil_enrollment(path, repo_data, 'Online pupil enrollment.csv')
     load_remediation_in_higher_education(path, repo_data, 'Remediation in higher education.csv')
     load_kindergarteners_in_full_day_program(path, repo_data, 'Kindergartners in full-day program.csv')

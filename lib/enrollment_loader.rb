@@ -90,7 +90,7 @@ class LoadFromCSVS
   end
 
   def self.load_pupil_enrollment(path, repo_data, file)
-    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
+    rows = CSV.readlines(path + '/' + file + '.csv', headers: true, header_converters: :symbol).map(&:to_h)
     group_by(rows).each do |district_name, rows|
       data = rows.map { |row| [row.fetch(:timeframe).to_i, row.fetch(:data).to_i] }.to_h
       district = district_for(district_name, repo_data)
