@@ -47,10 +47,10 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_correlates_with_household_income(district)
-    if district == 'state'
+    if district.fetch(:for) == 'state'
       income_correlation_for_all_districts
     else
-      participation = kindergarten_participation_against_household_income(district)
+      participation = kindergarten_participation_against_household_income(district.fetch(:for))
       if participation >= 0.6 && participation <= 1.5
         true
       else
@@ -121,7 +121,7 @@ class HeadcountAnalyst
   def income_correlation_for_all_districts
     results = []
     districts.each_pair do |key, value|
-      results << kindergarten_participation_correlates_with_household_income(key)
+      results << kindergarten_participation_correlates_with_household_income(:for => key)
     end
     number_of_trues = results.count { |e| e == true }
     number_of_falses = results.count { |e| e == false }

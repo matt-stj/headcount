@@ -43,9 +43,9 @@ class HeadcountAnalystTest < Minitest::Test
   def test_kindergarten_participation_correlates_with_household_income
     make_a_ha
 
-    assert_equal false, @ha.kindergarten_participation_correlates_with_household_income("DEL NORTE C-7")
-    assert_equal true, @ha.kindergarten_participation_correlates_with_household_income("AGUILAR REORGANIZED 6")
-    assert_equal false, @ha.kindergarten_participation_correlates_with_household_income("state")
+    assert_equal false, @ha.kindergarten_participation_correlates_with_household_income(:for => "DEL NORTE C-7")
+    assert_equal true, @ha.kindergarten_participation_correlates_with_household_income(:for => "AGUILAR REORGANIZED 6")
+    assert_equal false, @ha.kindergarten_participation_correlates_with_household_income(:for => "state")
 
     # assert something when fetched district is nil
     # assert_equal 0, @ha.kindergarten_participation_rate_variation("ACADEMY 20", "hi there")
