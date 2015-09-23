@@ -52,14 +52,20 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_kindergarten_participation_against_high_school_graduation_for_one_district
-    skip
     make_a_ha
-    #NNED TO DO SHIT HERE
-    assert_equal false, @ha.kindergarten_participation_against_high_school_graduation("PUEBLO CITY 60")
-    assert_equal false, @ha.kindergarten_participation_against_high_school_graduation("CHERRY CREEK 5")
-    assert_equal false, @ha.kindergarten_participation_against_high_school_graduation("BOULDER VALLEY RE 2")
-    assert_equal false, @ha.kindergarten_participation_against_high_school_graduation("state")
 
+    assert_equal -0.842, @ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
+    assert_equal -0.394, @ha.kindergarten_participation_rate_variation("CHERRY CREEK 5", 'state')
+    assert_equal 0.108, @ha.graduation_variation("CHERRY CREEK 5")
+    assert_equal -3.648, @ha.kindergarten_participation_against_high_school_graduation("CHERRY CREEK 5")
+  end
+
+  def test_kindergarten_participation_correlates_with_high_school_graduation
+    make_a_ha
+
+    assert_equal false, @ha.kindergarten_participation_correlates_with_high_school_graduation("CHERRY CREEK 5")
+    assert_equal true, @ha.kindergarten_participation_correlates_with_high_school_graduation("ARICKAREE R-2")
+    assert_equal false, @ha.kindergarten_participation_correlates_with_high_school_graduation("state")
   end
 
 end
