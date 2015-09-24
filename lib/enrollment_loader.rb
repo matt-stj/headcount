@@ -228,7 +228,7 @@ class LoadFromCSVS
       hash[location] = rows
         .group_by {|row| row.fetch(:timeframe).to_i }
         .map {|year, rows|
-          defaults = {math: nil}
+          defaults = {math: nil, reading: nil, writing: nil}
           actual = rows.map { |row|
               [ row.fetch(:score).downcase.to_sym,
                 row.fetch(:data).to_s[0..4].to_f
@@ -240,6 +240,7 @@ class LoadFromCSVS
       repo_data[location.upcase][:statewide_testing][:third_grade_proficiency] = hash[location]
     end
   end
+
 
   def self.statewide_testing_load_eight_grade_students(path, repo_data, file)
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)

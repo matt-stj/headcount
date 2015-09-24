@@ -15,23 +15,17 @@ class HeadcountAnalyst
     @repo.districts
   end
 
-  def top_statewide_testing_year_over_year_growth_in_3rd_grade(args = {:top => 1, :subject => :all})
-    subject = args[:subject]
+  def top_statewide_testing_year_over_year_growth_in_3rd_grade(subject)
     results = []
-    if subject == :all
-      average_all_subjects
-    else
       districts.map do |district_name, district|
         statewide_data = district.statewide_testing.proficient_by_grade(3)
-        min_max_data = statewide_data.map { |year, proficiencies| [year, proficiencies.fetch(subject)]}
-                         .select { |year, proficiency| proficiency }
-                         .sort
+        min_max_data = statewide_data.map { |year, proficiencies| [year, proficiencies[subject]]}
+                                     .select { |year, proficiency| proficiency }
         next if min_max_data.length < 2
         change = find_delta_for_years_and_scores(min_max_data)
         results << [district_name, change]
       end
-      results.max_by(args[:top]) {|name, year| year }
-    end
+      results.max_by {|name, year| year }
   end
 
   def find_year_range(data)

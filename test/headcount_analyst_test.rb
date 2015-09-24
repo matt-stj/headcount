@@ -17,25 +17,8 @@ class HeadcountAnalystTest < Minitest::Test
     make_a_ha
     expected = [["WILEY RE-13 JT", 0.3], ["LA VETA RE-2", 0.162], ["LAKE COUNTY R-1", 0.112]]
 
-    assert_equal ["WILEY RE-13 JT", 0.3], @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:subject => :math)
-    assert_equal expected, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:top => 3, :subject => :math)
+    assert_equal ["WILEY RE-13 JT", 0.3], @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:math)
   end
-
-  # def test_top_statewide_testing_year_over_year_growth_in_3rd_grade_reading
-  #   make_a_ha
-  #   expected = [["KIT CARSON R-1", 0.352], ["LA VETA RE-2", 0.265], ["ELBERT 200", 0.157]]
-  #
-  #
-  #   assert_equal expected, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:top => 3, :subject => :writing)
-  # end
-  #
-  #
-  # def test_top_statewide_testing_year_over_year_growth_in_3rd_grade_for_reading
-  #   make_a_ha
-  #   expected = [["DOUGLAS COUNTY RE 1", 13.46], ["CENTENNIAL R-1", 0.114], ["LA VETA RE-2", 0.103]]
-  #
-  #   assert_equal expected, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:top => 3, :subject => :reading)
-  # end
 
   def test_kindergarten_participation_rate_variation_against_state
     make_a_ha
