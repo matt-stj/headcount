@@ -39,6 +39,8 @@ class HeadcountAnalyst
       results << [district_name, change]
     end
     #results.max_by(#district in here is the number of results) {|year| year.values}
+    results.max_by {|name, year| year }
+  end
 
   def kindergarten_participation_rate_variation(district_1, district_2)
     if district_2.fetch(:against) == 'state'

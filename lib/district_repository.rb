@@ -1,5 +1,5 @@
 require 'csv'
-require_relative 'loader'
+require_relative 'enrollment_loader'
 require_relative 'enrollment'
 require_relative 'district'
 require_relative 'statewide'

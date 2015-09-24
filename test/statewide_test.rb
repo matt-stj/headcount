@@ -9,6 +9,10 @@ class StatewideTestingTest < Minitest::Test
     @dr ||= DistrictRepository.from_csv(path)
   end
 
+  def self.remove_bullshit(hash)
+    hash.reject { |key, value| value == nil }
+  end
+
   def test_proficient_for_subject_by_race_in_year
     make_a_dr
     colorado = @dr.find_by_name('COLORADO')

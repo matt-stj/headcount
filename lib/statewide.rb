@@ -6,7 +6,7 @@ class StatewideTesting
   POSSIBLE_SUBJECTS = [:reading, :writing, :math]
   POSSIBLE_YEARS = [2011, 2012, 2013, 2014]
 
-  attr_reader :statewide_testing, :data
+  attr_reader :statewide_testing, :data, :remove_bullshit
 
   def initialize(data)
     @data = data
@@ -14,9 +14,11 @@ class StatewideTesting
 
   def proficient_by_grade(grade)
     if grade == 3
-      @data.fetch(:third_grade_proficiency, UnknownDataError)
+      third_grade = @data.fetch(:third_grade_proficiency, UnknownDataError)
+      third_grade.map {|key, value| key = key, value = value.reject {|key, value| value == nil}}.to_h
     elsif grade == 8
-      @data.fetch(:eigth_grade_proficiency, UnknownDataError)
+      eigth_grade = @data.fetch(:eigth_grade_proficiency, UnknownDataError)
+      eigth_grade.map {|key, value| key = key, value = value.reject {|key, value| value == nil}}.to_h
     else
       # #not sure if we still need this becuase of the argumet above
       fail UnknownDataError

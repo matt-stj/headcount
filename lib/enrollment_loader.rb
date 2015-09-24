@@ -31,6 +31,8 @@ class LoadFromCSVS
           :native_american=> "NATIVE AMERICAN",
           :all=> "ALL STUDENTS"
           }
+  UNRECOGNIZED_DATA = ["#VALUE!","LNE","\r\n","0",nil,"81.6*"," ", "N/A"]
+
 
   def self.path
     File.expand_path '../data', __dir__
@@ -54,7 +56,7 @@ class LoadFromCSVS
 
   def self.remove_unrecognized_data_from_rows(rows)
     rows.delete_if do |row|
-      row[:data] == "N/A" || row[:data] == "#VALUE!" || row[:data] == "LNE" || row[:data] == "\r\n" || row[:data] == "0" || row[:data] == nil
+      UNRECOGNIZED_DATA.include?(row[:data])
     end
   end
 
