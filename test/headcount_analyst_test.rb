@@ -13,11 +13,29 @@ class HeadcountAnalystTest < Minitest::Test
     @ha = HeadcountAnalyst.new(dr)
   end
 
-  def test_top_statewide_testing_year_over_year_growth_in_3rd_grade
+  def test_top_statewide_testing_year_over_year_growth_in_3rd_grade_reading
     make_a_ha
+    expected = [["WILEY RE-13 JT", 0.3], ["LA VETA RE-2", 0.162], ["LAKE COUNTY R-1", 0.112]]
 
-    assert_equal ["WILEY RE-13 JT", 0.3], @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:math)
+    assert_equal ["WILEY RE-13 JT", 0.3], @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:subject => :math)
+    assert_equal expected, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:top => 3, :subject => :math)
   end
+
+  # def test_top_statewide_testing_year_over_year_growth_in_3rd_grade_reading
+  #   make_a_ha
+  #   expected = [["KIT CARSON R-1", 0.352], ["LA VETA RE-2", 0.265], ["ELBERT 200", 0.157]]
+  #
+  #
+  #   assert_equal expected, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:top => 3, :subject => :writing)
+  # end
+  #
+  #
+  # def test_top_statewide_testing_year_over_year_growth_in_3rd_grade_for_reading
+  #   make_a_ha
+  #   expected = [["DOUGLAS COUNTY RE 1", 13.46], ["CENTENNIAL R-1", 0.114], ["LA VETA RE-2", 0.103]]
+  #
+  #   assert_equal expected, @ha.top_statewide_testing_year_over_year_growth_in_3rd_grade(:top => 3, :subject => :reading)
+  # end
 
   def test_kindergarten_participation_rate_variation_against_state
     make_a_ha
@@ -26,9 +44,6 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal 1.0, @ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ACADEMY 20')
     assert_equal 0.406, @ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'ASPEN 1')
     assert_raises(UnknownDataError) { @ha.kindergarten_participation_rate_variation('ACADEMY 20', against: 'NEW YORK') }
-
-    # assert something when fetched district is nil
-    # assert_equal 0, @ha.kindergarten_participation_rate_variation("ACADEMY 20", "hi there")
   end
 
   def test_kindergarten_participation_against_household_income

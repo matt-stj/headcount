@@ -219,27 +219,28 @@ class LoadFromCSVS
 
 
   def self.statewide_testing_load_third_grade_students(path, repo_data, file)
-      rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
-      remove_unrecognized_data_from_rows(rows)
-      grouped_rows = rows.group_by { |row| row.fetch(:location)}
-      # next unless not bullshit (NA, N/A, LNE, #VALUE!, \r\n)
-      hash = {}
-      location_with_years = grouped_rows.map do |location, rows|
-        hash[location] = rows
-          .group_by {|row| row.fetch(:timeframe).to_i }
-          .map {|year, rows|
-            defaults = {math: nil, reading: nil, writing: nil}
-            actual = rows.map { |row|
-                [ row.fetch(:score).downcase.to_sym,
-                  row.fetch(:data).to_s[0..4].to_f
-                ]
-              }.to_h
-            [year, defaults.merge(actual)]
-          }.to_h
-        district = district_for(location, repo_data)
-        repo_data[location.upcase][:statewide_testing][:third_grade_proficiency] = hash[location]
-      end
+    rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
+    remove_unrecognized_data_from_rows(rows)
+    grouped_rows = rows.group_by { |row| row.fetch(:location)}
+    # next unless not bullshit (NA, N/A, LNE, #VALUE!, \r\n)
+    hash = {}
+    location_with_years = grouped_rows.map do |location, rows|
+      hash[location] = rows
+        .group_by {|row| row.fetch(:timeframe).to_i }
+        .map {|year, rows|
+          defaults = {math: nil}
+          actual = rows.map { |row|
+              [ row.fetch(:score).downcase.to_sym,
+                row.fetch(:data).to_s[0..4].to_f
+              ]
+            }.to_h
+          [year, defaults.merge(actual)]
+        }.to_h
+      district = district_for(location, repo_data)
+      repo_data[location.upcase][:statewide_testing][:third_grade_proficiency] = hash[location]
     end
+    binding.pry
+  end
 
   def self.statewide_testing_load_eight_grade_students(path, repo_data, file)
     rows = CSV.readlines(path + '/' + file, headers: true, header_converters: :symbol).map(&:to_h)
