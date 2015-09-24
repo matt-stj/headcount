@@ -1,4 +1,5 @@
 require_relative '../lib/district_repository'
+require 'pry'
 
 class HeadcountAnalyst
   attr_reader :repo, :districts, :economic_profile, :statewide_testing, :data
@@ -15,33 +16,44 @@ class HeadcountAnalyst
     @repo.districts
   end
 
-  def top_statewide_testing_year_over_year_growth_in_3rd_grade(arg)
-    results = []
-
-    districts.map do |district_name, district|
-      statewide_data = district.statewide_testing.data.fetch(:third_grade_proficiency)
-      min_max_data = statewide_data.map { |year, proficiencies| [year, proficiencies.fetch(arg)]}
-                       .select { |year, proficiency| proficiency }
-                       .sort
-
-      next if min_max_data.length < 2
-
-      final_year = min_max_data.max_by { |year, data| year }.first
-      intial_year = min_max_data.min_by  { |year, data| year }.first
-      delta_years = final_year - intial_year
-
-      highest_score = min_max_data.max_by { |year, data| data }.last
-      lowest_score = min_max_data.min_by {|year, data| data }.last
-      delta_scores = highest_score - lowest_score
-
-      change = truncate(delta_scores/delta_years)
-
-      results << [district_name, change]
+  def top_statewide_testing_year_over_year_growth_in_3rd_grade(args = {:top => 1, :subject => :all})
+    subject = args[:subject]; results = []
+    if subject == :all
+      average_all_subjects
+    else
+      districts.map do |district_name, district|
+        statewide_data = district.statewide_testing.proficient_by_grade(3)
+        min_max_data = statewide_data.map { |year, proficiencies| [year, proficiencies.fetch(subject)]}
+                         .select { |year, proficiency| proficiency }
+                         .sort
+        next if min_max_data.length < 2
+        change = find_delta_for_years_and_scores(min_max_data)
+        results << [district_name, change]
+      end
+      results.max_by(args[:top]) {|name, year| year }
     end
-    #results.max_by(#district in here is the number of results) {|year| year.values}
-    results.max_by {|name, year| year }
   end
 
+  def find_year_range(data)
+    final_year = data.max_by { |year, data| year }.first
+    intial_year = data.min_by  { |year, data| year }.first
+    delta_years = final_year - intial_year
+  end
+
+  def find_score_range(data)
+    highest_score = data.max_by { |year, data| data }.last
+    lowest_score = data.min_by {|year, data| data }.last
+    delta_scores = highest_score - lowest_score
+  end
+
+  def find_delta_for_years_and_scores(data)
+      truncate(find_score_range(data)/find_year_range(data))
+  end
+
+  def average_all_subjects
+
+  end
+  #
 
 
     # ["WILEY RE-13 JT", 0.3]
@@ -136,8 +148,6 @@ class HeadcountAnalyst
     district_income_data = repo.find_by_name(district).economic_profile.data.fetch(:median_household_income)
     district_average_income = (district_income_data.values.inject(0, :+))/(district_income_data.values.size)
   end
-
-
 
   def average_graduation_rate(district)
     district_graduation_data = repo.find_by_name(district).enrollment.data.fetch(:graduation_rate)
