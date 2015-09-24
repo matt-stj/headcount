@@ -1,5 +1,4 @@
 require_relative '../lib/district_repository'
-require 'pry'
 
 class HeadcountAnalyst
   attr_reader :repo, :districts, :economic_profile, :statewide_testing, :data
@@ -17,7 +16,8 @@ class HeadcountAnalyst
   end
 
   def top_statewide_testing_year_over_year_growth_in_3rd_grade(args = {:top => 1, :subject => :all})
-    subject = args[:subject]; results = []
+    subject = args[:subject]
+    results = []
     if subject == :all
       average_all_subjects
     else
