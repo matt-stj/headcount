@@ -239,7 +239,6 @@ class LoadFromCSVS
       district = district_for(location, repo_data)
       repo_data[location.upcase][:statewide_testing][:third_grade_proficiency] = hash[location]
     end
-    binding.pry
   end
 
   def self.statewide_testing_load_eight_grade_students(path, repo_data, file)
